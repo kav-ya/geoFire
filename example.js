@@ -1,5 +1,5 @@
 var geoFire = require('./geoFire.js'),
-    geoFire = require('Firebase');
+    Firebase = require('Firebase');
 
 var geoRef = new Firebase('https://kavya.firebaseio.com/geo'),
     geo = new geoFire(geoRef);
