@@ -52,10 +52,10 @@ function drawInsertBtn() {
 }
 
 function geoInsert() {
-    geo.insertById(car1Pos["lat"], car1Pos["lon"], car1.getId(), car1);
-    geo.insertById(car2Pos["lat"], car2Pos["lon"], car2.getId(), car2);
-    geo.insertById(car3Pos["lat"], car3Pos["lon"], car3.getId(), car3);
-    geo.insertByLoc(origin["lat"], origin["lon"], requester, drawSearchBtn);
+    geo.insertById([car1Pos["lat"], car1Pos["lon"]], car1.getId(), car1);
+    geo.insertById([car2Pos["lat"], car2Pos["lon"]], car2.getId(), car2);
+    geo.insertById([car3Pos["lat"], car3Pos["lon"]], car3.getId(), car3);
+    geo.insertByLoc([origin["lat"], origin["lon"]], requester, drawSearchBtn);
 }
 
 function drawSearchBtn() {
@@ -95,7 +95,7 @@ function drawSearchBtn() {
 function geoFind() {
     var arg = document.getElementById('radius').value;
     var radius = (arg) ? parseInt(arg) : 0;
-    geo.searchAroundLoc(origin["lat"], origin["lon"], radius, printCars);
+    geo.searchAroundLoc([origin["lat"], origin["lon"]], radius, printCars);
 }
 
 function printCars(results) {
@@ -168,25 +168,25 @@ function dispatch(carId) {
     document.getElementById('behind').innerText = "";
 
     var midPos = { "lat": 37.762776, "lon": -122.435553 };
-    geo.updateLocById(midPos["lat"], midPos["lon"], carId);
+    geo.updateLocById([midPos["lat"], midPos["lon"]], carId);
 
     // Mid-point                                                                                                                                                                                           
     window.setTimeout(function() {
             geo.getLocById(carId, function(currentPos) {
-                    var midLoc = new google.maps.LatLng(currentPos["lat"], currentPos["lon"]);
+                    var midLoc = new google.maps.LatLng(currentPos[0], currentPos[1]);
                     car1Marker.setPosition(midLoc);
                     resultMarkerMap[carId].setPosition(midLoc);
                 });
 
             // Here
             var hereLoc = { "lat": 37.758552, "lon": -122.423521 };
-            geo.updateLocById(hereLoc["lat"], hereLoc["lon"], carId);
+            geo.updateLocById([hereLoc["lat"], hereLoc["lon"]], carId);
 
             window.setTimeout(function() {
                     geo.getLocById(carId, function(currentPos) {
                             consoleText = "Car " + carId + " is here!";
                             document.getElementById('console').innerText = consoleText;
-                            var hereLoc = new google.maps.LatLng(currentPos["lat"], currentPos["lon"]);
+                            var hereLoc = new google.maps.LatLng(currentPos[0], currentPos[1]);
                             car1Marker.setPosition(hereLoc);
                             resultMarkerMap[carId].setPosition(hereLoc);
                             window.setTimeout(endDemo, 2000);

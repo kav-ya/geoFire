@@ -4,10 +4,10 @@ var geoFire = require('./geoFire.js'),
 var geoRef = new Firebase('https://kavya.firebaseio.com/geo'),
     geo = new geoFire(geoRef);
 
-var mission = {"lat": 37.757008, "lon": -122.421237 };
+var mission = [37.757008, -122.421237];
 
 // Car in Haight-Ashbury, car in South Beach
-geo.searchAroundLoc(mission["lat"], mission["lon"], 7, function(results) {
+geo.searchAroundLoc(mission[0], mission[1], 7, function(results) {
         var cars = [];
         for (var ix = 0; ix < results.length; ix++) {
             cars.push(results[ix]['id']);

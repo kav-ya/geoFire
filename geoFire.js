@@ -33,49 +33,51 @@
     
     /**
      * Generate a geohash of the specified precision/string length
-     * from a latitude, longitude pair.
+     * from a latitude, longitude pair passed in as an array.
      */
-    function encode(lat, lon, precision) {
-        var hash = "",
-	    hashVal = 0,
+    function encode(latLon, precision) {
+        var lat = latLon[0],
+            lon = latLon[1],
+            hash = "",
+            hashVal = 0,
             bits = 0,
             even = 1,
             latRange = { "min":  -90, "max":  90 },
             lonRange = { "min": -180, "max": 180 },
             val, range, mid;
-		
-       precision = Math.min(precision || 12, 22);
-
-       if (lat < latRange["min"] || lat > latRange["max"])
-           throw "Invalid latitude specified! (" + lat + ")";
-       
-       if (lon < lonRange["min"] || lon > lonRange["max"])
-           throw "Invalid longitude specified! (" + lon + ")";
-       
-       while (hash.length < precision) {
-           val = (even) ? lon : lat;
-           range = (even) ? lonRange : latRange;
-           
-           mid = (range["min"] + range["max"]) / 2;
-           if (val > mid) {
-               hashVal = (hashVal << 1) + 1;
-               range["min"] = mid;
-           } else {
-               hashVal = (hashVal << 1) + 0;
-               range["max"] = mid;
-           }
-           
-           even = !even;
-           if (bits < 4) {
-               bits++;
-           } else {
-               bits = 0;
-               hash += BASE32[hashVal].toString();
-               hashVal = 0;
-           }
-       }
-       
-       return hash;
+                    
+        precision = Math.min(precision || 12, 22);
+        
+        if (lat < latRange["min"] || lat > latRange["max"])
+            throw "Invalid latitude specified! (" + lat + ")";
+        
+        if (lon < lonRange["min"] || lon > lonRange["max"])
+            throw "Invalid longitude specified! (" + lon + ")";
+        
+        while (hash.length < precision) {
+            val = (even) ? lon : lat;
+            range = (even) ? lonRange : latRange;
+            
+            mid = (range["min"] + range["max"]) / 2;
+            if (val > mid) {
+                    hashVal = (hashVal << 1) + 1;
+                    range["min"] = mid;
+            } else {
+                hashVal = (hashVal << 1) + 0;
+                    range["max"] = mid;
+            }
+            
+            even = !even;
+            if (bits < 4) {
+                bits++;
+                } else {
+                    bits = 0;
+                    hash += BASE32[hashVal].toString();
+                    hashVal = 0;
+            }
+        }
+        
+        return hash;
     }
     
     function halve_interval(interval, decimal, mask) {
@@ -87,7 +89,8 @@
     }
 
     /**                                                                                                              
-     * Decode a geohash to retrieve the latitude, longitude pair.
+     * Decode a geohash to retrieve the latitude, longitude pair as an array
+     * with two elements: array[0]-> lat, array[1]-> lon
      */ 
     function decode(hash) {
         var latRange = { "min": -90, "max": 90 },
@@ -109,7 +112,7 @@
         lat = (latRange["min"] + latRange["max"]) / 2;
         lon = (lonRange["min"] + lonRange["max"]) / 2;
         
-        return { "lat": lat, "lon": lon };
+        return [lat, lon];
     }
 
     function deg2rad(deg) {
@@ -154,7 +157,7 @@
     function distByHash(hash1, hash2) {
         var loc1 = decode(hash1);
         var loc2 = decode(hash2);
-        return dist(loc1["lat"], loc1["lon"], loc2["lat"], loc2["lon"]);
+        return dist(loc1[0], loc1[1], loc2[0], loc2[1]);
     }
 
     /**
@@ -222,10 +225,10 @@
     geoFire.prototype.neighbors = geoFire.neighbors = neighbors;
 
     /**
-     * Store data by location, specified by a latitude, longitude pair.
+     * Store data by location, specified by a latitude, longitude array.
      */
-    geoFire.prototype.insertByLoc = function insertByLoc(lat, lon, data, cb) {
-        data.hash = encode(lat, lon);
+    geoFire.prototype.insertByLoc = function insertByLoc(latLon, data, cb) {
+        data.hash = encode(latLon);
         this._firebase.child(data.hash).push(data, function(error) {
                 cb = cb || noop;
                 if (!error)
@@ -236,13 +239,13 @@
     };
     
     /**
-     * Store data by location (a latitude, longitude pair) and
+     * Store data by location (a latitude, longitude array) and
      * a user-provided id.
      * The data can be queried by location or by id. 
      */
-    geoFire.prototype.insertById = function insertById(lat, lon, id, data, cb) {
+    geoFire.prototype.insertById = function insertById(latLon, id, data, cb) {
         var self = this;
-        data.hash = encode(lat, lon);
+        data.hash = encode(latLon);
         this._firebase.child(data.hash).child(id).set(data, function(error) {
                 if (!error) { // TODO: Return error at this point too
                     self._agents.child(id).set(data, function(error) {               
@@ -272,19 +275,19 @@
     /**
      * Update the location of the data point with the specified id.
      */
-    geoFire.prototype.updateLocById = function updateLocById(lat, lon, id) {
+    geoFire.prototype.updateLocById = function updateLocById(latLon, id) {
         var self = this;
         this._agents.child(id).once('value',
                                     function (snapshot) {
                                         var data = snapshot.val();
-                                        self.insertById(lat, lon, id, data);
+                                        self.insertById(latLon, id, data);
                                         self._firebase.child(data.hash).child(id).remove();
                                     });
     };
 
     /**
      * Retrieve the location of the data point with the specified id. 
-     * The location is returned as a dictionary with two keys: "lat" and "lon"
+     * The location is returned as a array with two elements: array[0]-> lat, array[1]-> lon
      */
     geoFire.prototype.getLocById = function getLocById(id, cb) {
         var self = this;
@@ -297,13 +300,13 @@
 
     /**
      * Find all data points within the specified radius, in kilometers,
-     * from the specified latitude, longitude pair.
+     * from the specified latitude, longitude pair, passed in as an array.
      * The matching points are returned in distance sorted order.
      */
-    geoFire.prototype.searchAroundLoc = function searchAroundLoc(lat, lon,
+    geoFire.prototype.searchAroundLoc = function searchAroundLoc(latLon,
                                                                  radius,
                                                                  cb) {
-        var hash = encode(lat, lon);
+        var hash = encode(latLon);
         this.searchRadius(hash, radius, cb);
     };  
 
