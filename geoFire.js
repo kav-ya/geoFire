@@ -130,6 +130,13 @@
     function deg2km(deg) {
         return rad2km(deg2rad(deg));
     }
+
+    /**
+     * Converts miles to kilometers
+     */
+    function miles2km(mile) {
+        return mile * 1.60934;
+    }
     
     /**
      * Calculate the distance between two points on a globe, via Haversine
