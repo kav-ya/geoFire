@@ -33,7 +33,7 @@
     
     /**
      * Generate a geohash of the specified precision/string length
-     * from a latitude, longitude pair passed in as an array.
+     * from the [latitude, longitude] pair, specified as an array.
      */
     function encode(latLon, precision) {
         var lat = latLon[0],
@@ -89,8 +89,8 @@
     }
 
     /**                                                                                                              
-     * Decode a geohash to retrieve the latitude, longitude pair as an array
-     * with two elements: array[0]-> lat, array[1]-> lon
+     * Decode the geohash to get the location of the center of the bounding box it represents;
+     * the [latitude, longitude] coordinates of the center are returned as an array.
      */ 
     function decode(hash) {
         var latRange = { "min": -90, "max": 90 },
@@ -134,10 +134,17 @@
     /**
      * Converts miles to kilometers
      */
-    function miles2km(mile) {
-        return mile * 1.60934;
+    function miles2km(miles) {
+        return miles * 1.60934;
     }
     
+    /**         
+     * Converts kilometers to miles
+     */
+    function km2miles(kilometers) {
+        return kilometers * 0.621371;
+    }
+
     /**
      * Calculate the distance between two points on a globe, via Haversine
      * formula, in kilometers. This is approximate due to the nature of the
@@ -229,10 +236,12 @@
     geoFire.prototype.dimensions = geoFire.dimensions = dimensions;
     geoFire.prototype.dist = geoFire.dist = dist;
     geoFire.prototype.distByHash = geoFire.distByHash = distByHash;
-    geoFire.prototype.encode = geoFire.encode = encode;
-    geoFire.prototype.decode = geoFire.decode = decode;
     geoFire.prototype.neighbor = geoFire.neighbor = neighbor;
     geoFire.prototype.neighbors = geoFire.neighbors = neighbors;
+    geoFire.prototype.miles2km = geoFire.miles2km = miles2km;
+    geoFire.prototype.km2miles = geoFire.km2miles = km2miles;
+    geoFire.prototype.encode = geoFire.encode = encode;
+    geoFire.prototype.decode = geoFire.decode = decode;
 
     /**
      * Store data by location, specified by a latitude, longitude array.
@@ -244,7 +253,7 @@
                 if (!error)
                     cb();
                 else
-                    console.log("Insert error");
+                    console.log("geoFire.insertByLoc error");
             });
     };
     
@@ -263,7 +272,7 @@
                             if (!error)
                                 cb();
                             else
-                                console.log("Insert error");
+                                console.log("geoFire.insertById error");
                         });
                 }
             });
@@ -292,21 +301,25 @@
         this._agents.child(id).once('value',
                                     function (snapshot) {
                                         var data = snapshot.val();
+                                        if (data === null)
+                                            console.log("geoFire.updateLocById error: Invalid Id argument.");
                                         self.insertById(latLon, id, data);
                                         self._firebase.child(data.hash).child(id).remove();
                                     });
     };
 
     /**
-     * Retrieve the location of the data point with the specified id. 
-     * The location is returned as a array with two elements: array[0]-> lat, array[1]-> lon
+     * Get the location of the data point with the specified id; 
+     * the retrieved location is passed to the callback function
+     * as a [latitude, longitude] array or null.
      */
     geoFire.prototype.getLocById = function getLocById(id, cb) {
         var self = this;
         this._agents.child(id).once('value',
                                     function (snapshot) {
-                                        var data = snapshot.val();
-                                        cb(self.decode(data.hash));
+                                        var data = snapshot.val(),
+                                            arg = (data === null) ? null : (self.decode(data.hash));
+                                        cb(arg);
                                     });
     };
 
