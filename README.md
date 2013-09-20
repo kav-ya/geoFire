@@ -3,7 +3,7 @@ geoFire
 **geoFire** is a helper library for location-based operations in [Firebase](https://www.firebase.com/).  
 It provides functions to store data for location querying in Firebase, 
 and perform location queries such as location updates and localized searches.
-geoFire stores the location coordinates of a data point as a [geohash] (http://en.wikipedia.org/wiki/Geohash) internally.
+geoFire stores the location coordinates of a data point as a [geohash] (http://en.wikipedia.org/wiki/Geohash) in Firebase.
 
 Using the geoFire library
 ------------------------
@@ -16,29 +16,29 @@ will be stored at:
 You can see your Firebase data at any time by navigating to the geoRef url.
 
 The geoFire library provides functions to:  
-  1. Store/ remove data in Firebase for location queries:  
-    - insertByLoc  
-    - insertById  
-    - removeById
+  1. [Store/ remove data in Firebase for location queries](#save):  
+    - [insertByLoc](#insert1)  
+    - [insertById](#insert2)  
+    - [removeById](#remove)
 
-  2. Perform location queries:  
-    - getLocById  
-    - updateLocById
+  2. [Perform location queries](#query):  
+    - [getLocById](#get)  
+    - [updateLocById](#update)
 
-  3. Perform localized searches:  
-    - searchAroundLoc  
-    - searchAroundId
+  3. [Perform localized searches] (#search):  
+    - [searchAroundLoc](#search1)  
+    - [searchAroundId](#search2)
 
 The library also has helper functions to:  
-  4. Convert between latitude, longitude pairs and geohashes:  
-    - encode  
-    - decode
+  4. [Convert between latitude, longitude pairs and geohashes](#loc):  
+    - [encode](#encode)  
+    - [decode](#decode)
 
-  5. Convert between miles and kilometers:  
-    - miles2km  
-    - km2miles
+  5. [Convert between miles and kilometers](#dist):  
+    - [miles2km](#miles)  
+    - [km2miles](#km)
 
-Storing/ removing data for location queries:
+<a id="save"></a>Storing/ removing data for location queries:
 ----------------------------------
 ###insertByLoc(latLon, data, [onComplete])
 
