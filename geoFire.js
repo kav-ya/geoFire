@@ -404,8 +404,6 @@
         delete uniquesObj;
         
         resultHandler = function(snapshot) {
-            console.log("RESULTHANDLING!");
-
             // Compile the results for each of the queries as they return.
             var matchSet = snapshot.val();
             
@@ -453,11 +451,9 @@
         }
     };
     
-    function watchArea() {
-
+    function boxSearch(bbox) {
+        
     }
-
-
 
     if (typeof module === "undefined") {
         self.geoFire = geoFire;

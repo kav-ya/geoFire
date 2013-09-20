@@ -121,7 +121,7 @@ Each data point in the array is represented as a [latitude, longitude] array.
                             console.log("latLon of a found point = ", array[i]);
                        });
 
-**NOTE: You can convert between miles and kilometers with the miles2km and km2miles functions**
+**NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles(#km2mileskilometers)**
 
 Location/Geohash conversion:
 ---------------------------
