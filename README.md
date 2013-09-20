@@ -15,15 +15,15 @@ will be stored at:
 
 You can see your Firebase data at any time by navigating to the geoRef url.
 
-The geoFire library provides functions to:
-    1. Store/remove data in Firebase for location queries:
-        - insertByLoc
-        - insertById
-        - removeById
+The geoFire library provides functions to:  
+  1. Store/remove data in Firebase for location queries:  
+    - insertByLoc  
+    - insertById  
+    - removeById
 
-    2. Perform location queries:
-        - getLocById
-        - updateLocById
+  2. Perform location queries:  
+    - getLocById  
+    - updateLocById
        
     3. Perform localized searches:
         - searchAroundLoc
