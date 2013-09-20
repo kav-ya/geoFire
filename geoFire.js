@@ -187,11 +187,14 @@
         
         var lastChar = hash.charAt(hash.length - 1),
             type = (hash.length % 2) ? "odd" : "even",
-            base = hash.substring(0,hash.length-1);
+            base = hash.substring(0, hash.length-1);
         
-        if (BORDERS[dir][type].indexOf(lastChar)!=-1)
+        if (BORDERS[dir][type].indexOf(lastChar) != -1) {        
+            if (base.length <= 0)
+                return "";
             base = neighbor(base, dir);
-        
+        }
+
         return base + BASE32[NEIGHBORS[dir][type].indexOf(lastChar)];
     }
 
@@ -365,7 +368,8 @@
         // Get unique list of neighbor hashes.
         var uniquesObj = {};
         for (var ix = 0; ix < queries.length; ix++) {
-            uniquesObj[queries[ix]] = queries[ix];
+            if (queries[ix].length > 0)
+                uniquesObj[queries[ix]] = queries[ix];
         }
         queries = values(uniquesObj);
         delete uniquesObj;

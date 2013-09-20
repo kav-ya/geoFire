@@ -1,7 +1,10 @@
 var geoFire = require('./geoFire.js'),
     Firebase = require('Firebase');
 
-var geoRef = new Firebase('https://kavya.firebaseio.com/geo'),
+// To save location data to Firebase, geoFire needs a Firebase reference;
+// this is where data is saves
+var refName = randomString(10);
+var geoRef = new Firebase('https://'+refName+'.firebaseio-demo.com/geo');
     geo = new geoFire(geoRef);
 
 var mission = [37.757008, -122.421237];
@@ -28,3 +31,14 @@ geo.searchAroundId(1, 5, function(results) {
         console.log(' ');
         process.exit();
     });
+
+/** Generates a random string **/
+function randomString(length) {
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for(var i = 0; i < length; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
