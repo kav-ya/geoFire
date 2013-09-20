@@ -38,8 +38,8 @@ The library also has helper functions to:
     - [miles2km](#miles)  
     - [km2miles](#km)
 
-<a id="save"></a>Storing/ removing data for location queries:
-----------------------------------
+<a id="save"></a> Storing/ removing data for location queries:
+------------------------------------------------------------
 ###insertByLoc(latLon, data, [onComplete])
 
 Inserts data solely by location. If the insert is successful, the optional callback function (if provided) is called with a null argument;
