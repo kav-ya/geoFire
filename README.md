@@ -1,8 +1,100 @@
 geoFire
 =======
 **geoFire** is a helper library for location-based operations in [Firebase](https://www.firebase.com/).
-It provides functions to generate [geohashes](http://en.wikipedia.org/wiki/Geohash), store data for location queries and
-perform location queries such as location updates and localized searches.
+It provides functions to store data for location querying in Firebase, 
+and perform location queries such as location updates and localized searches.
+geoFire stores the location coordinates of a data point as its [geohash] (http://en.wikipedia.org/wiki/Geohash) internally.
+
+To use the geoFire library, include the geoFire.js script and create a geoFire object with the Firebase reference your data
+will be stored at:
+
+    var geoRef = new Firebase('https://abc.firebaseio-demo.com'),
+        geo = new geoFire(geoRef);
+
+You can see your Firebase data by navigating to the geoRef url.
+
+The geoFire library provides functions to:
+1. Store/remove data in Firebase for location queries:
+       - insertByLoc
+       - insertById
+       - removeById
+
+2. Perform location queries:
+       - getLocById
+       - updateLocById
+       
+3. Perform localized searches:
+       - searchAroundLoc
+       - searchAroundId
+
+The library also has helper functions to:
+4. Convert between latitude, longitude pairs and geohashes:
+       - encode
+       - decode
+
+5. Convert between miles and kilometers:
+       - miles2km
+       - km2miles
+
+
+1. Storing/removing data for location queries:
+----------------------------------
+###insertByLoc(latLon, data, [onComplete])
+
+Inserts data solely by location. If the insert is successful, the optional callback function (if provided) is called with a null argument;
+if the insert fails, an error message is printed to console.
+
+    var car1 = { id: 1, make: "Tesla" };
+
+    // No callback function.
+    geo.insertByLoc([37.771393, -122.447104], car1); 
+
+     // With a callback function.
+    geo.insertByLoc([37.771393, -122.447104], car1, function() { console.log("Insert done!"); });
+
+###insertById(latLon, id, data, [onComplete])
+
+Inserts data by location and a client-provided identifer. If the insert is successful, the optional callback function (if provided) is called
+with a null argument; if the insert fails, an error message is printed to console.
+**Data that is inserted using this function can be queried using the client-provided Id.**
+
+    var car2 = { id: 2, make: "BMW" };
+
+    // No callback function.
+    geo.insertById([37.780314, -122.513698], car2.id, car2);
+
+    // With a callback function.
+    geo.insertById([37.780314, -122.513698], car2.id, car2, function() { console.log("Insert done!); });
+
+###removeById(id, [onComplete])
+
+Removes a data point that was inserted using `insertById` and calls the optional callback function, if provided. The 
+callback is passed a null argument on success and an Error on failure.
+
+    // No callback function.
+    geo.removeById(car2.id);
+
+    // With a callback function.
+    geo.removeById(car2.id, function(error) { if(!error) console.log("Remove done!"); });
+
+2. Performing location queries:
+----------------------------
+
+
+###getLocById(id, callback)
+
+Retrieves the location of a data point that was inserted by Id. The location is passed to the callback function as an array with two elements: array[0]-> latitude, array[1]-> longitude.
+
+    geo.getLocById(car2.id, cb); // calls cb([37.780314, -122.513698])
+
+###updateLocById(newLatLon, id)
+Updates the location of a data point that was inserted by Id.
+    
+    geo.updateLocById([36.01234, -121.51369], car2.id);
+
+
+
+
 
 Generating a geohash:
 ---------------------
@@ -27,45 +119,6 @@ Returns the latitude and longitude from a geohash, as a array with two elements:
     var latitude = location[0]; // latitude = 37.757008
     var longitude = location[1]; // longitude = -122.421237
 
-Storing data for location queries:
-----------------------------------
-###insertByLoc(latLon, data, [callback])
-
-Inserts data solely by location. If the insert is successful, the callback function (if provided) is called;
-if the insert fails, an error message is printed to console.
-
-    var car1 = { id: 1, make: "Tesla" };
-    geo.insertByLoc([37.771393, -122.447104], car1, cb);
-
-###insertById(latLon, id, data, [callback])
-
-Inserts data by location and a client-provided identifer. If the insert is successful, the callback function (if provided) is called;
-if the insert fails, an error message is printed to console.
-Data that is inserted using this function can be queried using the client-provided Id.
-
-    var car2 = { id: 2, make: "BMW" };
-    geo.insertById([37.780314, -122.513698], car2.id, car2, cb);
-
-###removeById(id)
-
-Removes a data point that was inserted by Id.
-
-    geo.removeById(car2.id);
-
-Performing location queries:
-----------------------------
-geoFire supports the following operations on data points inserted by Id:
-
-###getLocById(id, callback)
-
-Retrieves the location of a data point that was inserted by Id. The location is passed to the callback function as an array with two elements: array[0]-> latitude, array[1]-> longitude.
-
-    geo.getLocById(car2.id, cb); // calls cb([37.780314, -122.513698])
-
-###updateLocById(newLatLon, id)
-Updates the location of a data point that was inserted by Id.
-    
-    geo.updateLocById([36.01234, -121.51369], car2.id);
 
 ***
 geoFire provides two functions to get the data points surrounding a point:
