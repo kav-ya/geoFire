@@ -1,19 +1,21 @@
 geoFire
 =======
-**geoFire** is a helper library for location-based operations in [Firebase](https://www.firebase.com/).
+**geoFire** is a helper library for location-based operations in [Firebase](https://www.firebase.com/).  
 It provides functions to store data for location querying in Firebase, 
 and perform location queries such as location updates and localized searches.
-geoFire stores the location coordinates of a data point as its [geohash] (http://en.wikipedia.org/wiki/Geohash) internally.
+geoFire stores the location coordinates of a data point as a [geohash] (http://en.wikipedia.org/wiki/Geohash) internally.
 
-To use the geoFire library, include the geoFire.js script and create a geoFire object with the Firebase reference your data
+Using the geoFire library
+------------------------
+To use the geoFire library, include the **geoFire.js** file and create a geoFire object with the Firebase reference your data
 will be stored at:
 
     var geoRef = new Firebase('https://abc.firebaseio-demo.com'),
         geo = new geoFire(geoRef);
 
-You can see your Firebase data by navigating to the geoRef url.
+You can see your Firebase data at any time by navigating to the geoRef url.
 
-The geoFire library provides functions to:
+The geoFire library provides functions to:  
 1. Store/remove data in Firebase for location queries:
        - insertByLoc
        - insertById
@@ -35,7 +37,6 @@ The library also has helper functions to:
 5. Convert between miles and kilometers:
        - miles2km
        - km2miles
-
 
 1. Storing/removing data for location queries:
 ----------------------------------
