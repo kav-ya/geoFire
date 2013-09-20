@@ -16,7 +16,7 @@ will be stored at:
 You can see your Firebase data at any time by navigating to the geoRef url.
 
 The geoFire library provides functions to:  
-  1. [Store/ remove data in Firebase for location queries](#save):  
+  1. [Store/ remove data in Firebase for location queries](#-storing-removing-data-for-location-queries):  
     - [insertByLoc](#insert1)  
     - [insertById](#insert2)  
     - [removeById](#remove)
