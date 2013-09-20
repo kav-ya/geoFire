@@ -17,28 +17,28 @@ You can see your Firebase data at any time by navigating to the geoRef url.
 
 The geoFire library provides functions to:  
   1. [Store/ remove data in Firebase for location queries](#-storing-removing-data-for-location-queries):  
-    - [insertByLoc](#insert1)  
-    - [insertById](#insert2)  
-    - [removeById](#remove)
+    - [insertByLoc](#insertbyloclatlon-data-oncomplete)
+    - [insertById](#insertbyidlatlon-id-data-oncomplete)  
+    - [removeById](#removebyidid-oncomplete)
 
-  2. [Perform location queries](#query):  
-    - [getLocById](#get)  
-    - [updateLocById](#update)
+  2. [Perform location queries](#performing-location-queries):  
+    - [getLocById](#getlocbyidid-callback)  
+    - [updateLocById](#updatelocbyidlatlon-id)
 
-  3. [Perform localized searches] (#search):  
-    - [searchAroundLoc](#search1)  
-    - [searchAroundId](#search2)
+  3. [Perform localized searches] (#performing-localized-searches):  
+    - [searchAroundLoc](#searcharoundloclatlon-distance-callback)  
+    - [searchAroundId](#searcharoundidid-distance-callback)
 
 The library also has helper functions to:  
-  4. [Convert between latitude, longitude pairs and geohashes](#loc):  
-    - [encode](#encode)  
-    - [decode](#decode)
+  4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
+    - [encode](#encodelatlon-precision)  
+    - [decode](#decodegeohash)
 
-  5. [Convert between miles and kilometers](#dist):  
-    - [miles2km](#miles)  
-    - [km2miles](#km)
+  5. [Convert between miles and kilometers](#milekilometer-conversion):  
+    - [miles2km](#miles2kmmiles)  
+    - [km2miles](#km2mileskilometers)
 
-<a id="save"></a> Storing/ removing data for location queries:
+Storing/ removing data for location queries:
 ------------------------------------------------------------
 ###insertByLoc(latLon, data, [onComplete])
 
@@ -88,7 +88,7 @@ Gets the location of the data point with the specified Id; the data point must h
 
     geo.getLocById(car2.id, function(latLon) { console.log("Lat, Lon = ", latLon[0], latLon[1]); });
 
-###updateLocById(newLatLon, id)
+###updateLocById(latLon, id)
 
 Updates the location of the data point with the specified Id; the data point must have been inserted using `insertById`.
 `updateLocById` does not return anything on success; on failure, an error message is printed to console.
@@ -145,4 +145,9 @@ the location is returned as a [latitude, longitude] array.
 Mile/Kilometer conversion:
 --------------------------
 ###miles2km(miles)
+
+Returns kilometers from miles.
+
 ###km2miles(kilometers)
+
+Returns miles from kilometers.
