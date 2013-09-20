@@ -103,10 +103,11 @@ Finds all data points that are within the specified distance from the source poi
 the distance is in kilometers. `searchAroundLoc` does not return anything; it passes an array of the matching data points, **sorted by distance**, to the callback function.
 Each data point in the array is represented as a [latitude, longitude] array.
 
-    geo.searchAroundLoc([37.771393, -122.447104], 5, function(array) { 
-                                                                        for (var i = 0; i < array.length; i++)
-                                                                            console.log("latLon of a found point = ", array[i]);
-                                                                     });
+    geo.searchAroundLoc([37.771393, -122.447104], 5,
+                        function(array) { 
+                            for (var i = 0; i < array.length; i++)
+                                console.log("latLon of a found point = ", array[i]);
+                        });
 
 ###searchAroundId(id, distance, callback)
 
@@ -114,10 +115,11 @@ Finds all data points that are within the specified distance from the source poi
 `insertById`. The distance is in kilometers. `searchAroundId` does not return anything; it passes an array of the matching data points, **sorted by distance**, to the callback function.
 Each data point in the array is represented as a [latitude, longitude] array.
 
-   geo.searchAroundId(car2.id, 5, function(array) {
-                                                    for (var i = 0; i < array.length; i++)
-                                                        console.log("latLon of a found point = ", array[i]);
-                                                   });
+    geo.searchAroundId(car2.id, 5,
+                       function(array) {
+                        for (var i = 0; i < array.length; i++)
+                            console.log("latLon of a found point = ", array[i]);
+                       });
 
 **NOTE: You can convert between miles and kilometers with the miles2km and km2miles functions**
 

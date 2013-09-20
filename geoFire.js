@@ -228,8 +228,17 @@
         return values;
     }
     
+    function setHash(data, geohash) {
+        var primitive = JSON.stringify(data),
+            copy = JSON.parse(primitive);
+
+        copy.geohash = geohash;
+
+        return copy;
+    }
+
     function geoFire(firebaseRef) {
-        this._firebase = firebaseRef;
+        this._firebase = firebaseRef.child('geo');
         this._agents = this._firebase.child('agents');
     }
 
@@ -247,8 +256,8 @@
      * Store data by location, specified by a latitude, longitude array.
      */
     geoFire.prototype.insertByLoc = function insertByLoc(latLon, data, cb) {
-        data.hash = encode(latLon);
-        this._firebase.child(data.hash).push(data, function(error) {
+        var geohash = encode(latLon);
+        this._firebase.child(geohash).push(data, function(error) {
                 cb = cb || noop;
                 if (!error)
                     cb();
@@ -263,11 +272,14 @@
      * The data can be queried by location or by id. 
      */
     geoFire.prototype.insertById = function insertById(latLon, id, data, cb) {
-        var self = this;
-        data.hash = encode(latLon);
-        this._firebase.child(data.hash).child(id).set(data, function(error) {
+        var self = this,
+            geohash = encode(latLon);
+
+        delete data.geohash;
+        this._firebase.child(geohash).child(id).set(data, function(error) {
                 if (!error) { // TODO: Return error at this point too
-                    self._agents.child(id).set(data, function(error) {               
+                    var copy = setHash(data, geohash);
+                    self._agents.child(id).set(copy, function(error) {               
                             cb = cb || noop;
                             if (!error)
                                 cb();
@@ -277,22 +289,22 @@
                 }
             });
     };
-
+    
     /**
      * Delete the data point with the specified id.
      */
-    geoFire.prototype.removeById = function removeById(id, [onComplete]) {
+    geoFire.prototype.removeById = function removeById(id, cb) {
         var self = this;
         this._agents.child(id).once('value', 
                                     function (snapshot) {
                                         var data = snapshot.val();
-                                        self._firebase.child(data.hash).child(id).remove(function(error) {
+                                        self._firebase.child(data.geohash).child(id).remove(function(error) {
                                                 if (!error)
-                                                    self._agents.child(id).remove(onComplete);                                                    
+                                                    self._agents.child(id).remove(cb);                                                    
                                             });
                                     });
     };
-
+    
     /**
      * Update the location of the data point with the specified id.
      */
@@ -303,8 +315,10 @@
                                         var data = snapshot.val();
                                         if (data === null)
                                             console.log("geoFire.updateLocById error: Invalid Id argument.");
-                                        self.insertById(latLon, id, data);
-                                        self._firebase.child(data.hash).child(id).remove();
+                                        var geohash = data.geohash;
+                                        self.insertById(latLon, id, data, function() { 
+                                                self._firebase.child(geohash).child(id).remove();
+                                            });
                                     });
     };
 
@@ -318,7 +332,7 @@
         this._agents.child(id).once('value',
                                     function (snapshot) {
                                         var data = snapshot.val(),
-                                            arg = (data === null) ? null : (self.decode(data.hash));
+                                            arg = (data === null) ? null : (self.decode(data.geohash));
                                         cb(arg);
                                     });
     };
@@ -345,7 +359,7 @@
         this._agents.child(id).once('value',
                                   function (snapshot) {
                                       var data = snapshot.val();
-                                      self.searchRadius(data.hash, radius, cb);
+                                      self.searchRadius(data.geohash, radius, cb);
                                   });
     };
 
@@ -390,13 +404,14 @@
         delete uniquesObj;
         
         resultHandler = function(snapshot) {
+            console.log("RESULTHANDLING!");
 
             // Compile the results for each of the queries as they return.
             var matchSet = snapshot.val();
             
             for (var hash in matchSet) {
                 for (var pushId in matchSet[hash]) {
-                    matches.push(matchSet[hash][pushId]);
+                    matches.push([hash, matchSet[hash][pushId]]);
                 }
             }
 
@@ -406,11 +421,13 @@
                 // Filter the returned queries using the specified radius.
                 for (var jx = 0; jx < matches.length; jx++) {
                     var match = matches[jx],
-                        pointDist = distByHash(srcHash, match['hash']);
+                        matchHash = match[0],
+                        matchElt = match[1],
+                        pointDist = distByHash(srcHash, matchHash);
                     
                     if (pointDist <= radius) {
-                        match.dist = pointDist;
-                        matchesFiltered.push(match);
+                        matchElt.dist = pointDist;
+                        matchesFiltered.push(matchElt);
                     }
                 }
 	      
@@ -432,10 +449,16 @@
             this._firebase
                 .startAt(null, startPrefix)
                 .endAt(null, endPrefix)
-                .once('value', resultHandler);
+                .on('value', resultHandler);
         }
     };
     
+    function watchArea() {
+
+    }
+
+
+
     if (typeof module === "undefined") {
         self.geoFire = geoFire;
     } else {
