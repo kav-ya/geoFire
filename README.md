@@ -15,30 +15,30 @@ will be stored at:
 
 You can see your Firebase data at any time by navigating to the geoRef url.
 
-The geoFire library provides functions to:  
-1. Store/remove data in Firebase for location queries:
-       - insertByLoc
-       - insertById
-       - removeById
+The geoFire library provides functions to:
+    1. Store/remove data in Firebase for location queries:
+        - insertByLoc
+        - insertById
+        - removeById
 
-2. Perform location queries:
-       - getLocById
-       - updateLocById
+    2. Perform location queries:
+        - getLocById
+        - updateLocById
        
-3. Perform localized searches:
-       - searchAroundLoc
-       - searchAroundId
+    3. Perform localized searches:
+        - searchAroundLoc
+        - searchAroundId
 
 The library also has helper functions to:
-4. Convert between latitude, longitude pairs and geohashes:
-       - encode
-       - decode
+    4. Convert between latitude, longitude pairs and geohashes:
+        - encode
+        - decode
 
-5. Convert between miles and kilometers:
-       - miles2km
-       - km2miles
+    5. Convert between miles and kilometers:
+        - miles2km
+        - km2miles
 
-1. Storing/removing data for location queries:
+Storing/removing data for location queries:
 ----------------------------------
 ###insertByLoc(latLon, data, [onComplete])
 
@@ -78,10 +78,8 @@ callback is passed a null argument on success and an Error on failure.
     // With a callback function.
     geo.removeById(car2.id, function(error) { if(!error) console.log("Remove done!"); });
 
-2. Performing location queries:
+Performing location queries:
 ----------------------------
-
-
 ###getLocById(id, callback)
 
 Retrieves the location of a data point that was inserted by Id. The location is passed to the callback function as an array with two elements: array[0]-> latitude, array[1]-> longitude.
@@ -89,12 +87,10 @@ Retrieves the location of a data point that was inserted by Id. The location is 
     geo.getLocById(car2.id, cb); // calls cb([37.780314, -122.513698])
 
 ###updateLocById(newLatLon, id)
+
 Updates the location of a data point that was inserted by Id.
     
     geo.updateLocById([36.01234, -121.51369], car2.id);
-
-
-
 
 
 Generating a geohash:
