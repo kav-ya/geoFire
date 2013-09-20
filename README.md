@@ -24,19 +24,19 @@ The geoFire library provides functions to:
   2. Perform location queries:  
     - getLocById  
     - updateLocById
-       
-    3. Perform localized searches:
-        - searchAroundLoc
-        - searchAroundId
 
-The library also has helper functions to:
-    4. Convert between latitude, longitude pairs and geohashes:
-        - encode
-        - decode
+  3. Perform localized searches:  
+    - searchAroundLoc  
+    - searchAroundId
 
-    5. Convert between miles and kilometers:
-        - miles2km
-        - km2miles
+The library also has helper functions to:  
+  4. Convert between latitude, longitude pairs and geohashes:  
+    - encode  
+    - decode
+
+  5. Convert between miles and kilometers:  
+    - miles2km  
+    - km2miles
 
 Storing/removing data for location queries:
 ----------------------------------
