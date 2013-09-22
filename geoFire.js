@@ -131,16 +131,10 @@
         return rad2km(deg2rad(deg));
     }
 
-    /**
-     * Converts miles to kilometers
-     */
     function miles2km(miles) {
         return miles * 1.60934;
     }
-    
-    /**         
-     * Converts kilometers to miles
-     */
+
     function km2miles(kilometers) {
         return kilometers * 0.621371;
     }
@@ -189,6 +183,11 @@
                 };
     }
   
+
+    /**
+     * Return the geohash of the neighboring bounding box in the
+     * direction specified,
+     */
     function neighbor(hash, dir) {
         hash = hash.toLowerCase();
         
@@ -205,6 +204,9 @@
         return base + BASE32[NEIGHBORS[dir][type].indexOf(lastChar)];
     }
 
+    /**
+     * Return the geohashes of all neighboring bounding boxes.
+     */
     function neighbors(hash) {
         var neighbors = [];
         neighbors.push(neighbor(hash, "north"));
@@ -233,15 +235,21 @@
             copy = JSON.parse(primitive);
 
         copy.geohash = geohash;
-
         return copy;
     }
 
     function geoFire(firebaseRef) {
-        this._firebase = firebaseRef.child('geo');
-        this._agents = this._firebase.child('agents');
+        if (typeof firebaseRef === "string") {
+            throw new Error("Please provide a Firebase reference instead " +
+                            "of a URL, eg: new Firebase(url)");
+        }
+
+        this._firebase = firebaseRef.child('geoFire').child('dataByHash');
+        this._agents = firebaseRef.child('geoFire').child('dataById');
     }
 
+    geoFire.prototype.encode = geoFire.encode = encode;
+    geoFire.prototype.decode = geoFire.decode = decode;
     geoFire.prototype.dimensions = geoFire.dimensions = dimensions;
     geoFire.prototype.dist = geoFire.dist = dist;
     geoFire.prototype.distByHash = geoFire.distByHash = distByHash;
@@ -249,86 +257,74 @@
     geoFire.prototype.neighbors = geoFire.neighbors = neighbors;
     geoFire.prototype.miles2km = geoFire.miles2km = miles2km;
     geoFire.prototype.km2miles = geoFire.km2miles = km2miles;
-    geoFire.prototype.encode = geoFire.encode = encode;
-    geoFire.prototype.decode = geoFire.decode = decode;
 
     /**
-     * Store data by location, specified by a latitude, longitude array.
+     * Store data by location, specified by a [latitude, longitude] array.
+     * When the insert has completed, the option callback function (if provided) is called
+     * with null on success/ Error on failure.
      */
     geoFire.prototype.insertByLoc = function insertByLoc(latLon, data, cb) {
-        var geohash = encode(latLon);
+        var cb = cb || noop,
+            geohash = encode(latLon);
+
         this._firebase.child(geohash).push(data, function(error) {
-                cb = cb || noop;
-                if (!error)
-                    cb();
-                else
-                    console.log("geoFire.insertByLoc error");
+                cb(error);
             });
     };
     
     /**
-     * Store data by location (a latitude, longitude array) and
-     * a user-provided id.
-     * The data can be queried by location or by id. 
+     * Store data by location, specified by a [latitude, longitude] array, and
+     * a user-provided Id. When the insert has completed, the option callback
+     * function (if provided) is called with null on success/ Error on failure. 
+     * Data inserted using this function can be queried by location or by id. 
      */
     geoFire.prototype.insertById = function insertById(latLon, id, data, cb) {
         var self = this,
+            cb = cb || noop,
             geohash = encode(latLon);
 
         delete data.geohash;
         this._firebase.child(geohash).child(id).set(data, function(error) {
-                if (!error) { // TODO: Return error at this point too
+                if (!error) {
                     var copy = setHash(data, geohash);
-                    self._agents.child(id).set(copy, function(error) {               
-                            cb = cb || noop;
-                            if (!error)
-                                cb();
-                            else
-                                console.log("geoFire.insertById error");
+                    self._agents.child(id).set(copy, function(error) {
+                            cb(error);
                         });
+                } else {
+                    cb(error);
                 }
             });
     };
     
     /**
-     * Delete the data point with the specified id.
+     * Remove the data point with the specified Id; the data point must have
+     * been inserted using insertById. On completion, the optional callback
+     * function (if provided) is called with null on success/ Error on failure.
      */
     geoFire.prototype.removeById = function removeById(id, cb) {
-        var self = this;
+        var self = this,
+            cb = cb || noop;
+
         this._agents.child(id).once('value', 
                                     function (snapshot) {
                                         var data = snapshot.val();
                                         self._firebase.child(data.geohash).child(id).remove(function(error) {
                                                 if (!error)
                                                     self._agents.child(id).remove(cb);                                                    
-                                            });
-                                    });
-    };
-    
-    /**
-     * Update the location of the data point with the specified id.
-     */
-    geoFire.prototype.updateLocById = function updateLocById(latLon, id) {
-        var self = this;
-        this._agents.child(id).once('value',
-                                    function (snapshot) {
-                                        var data = snapshot.val();
-                                        if (data === null)
-                                            console.log("geoFire.updateLocById error: Invalid Id argument.");
-                                        var geohash = data.geohash;
-                                        self.insertById(latLon, id, data, function() { 
-                                                self._firebase.child(geohash).child(id).remove();
+                                                else
+                                                    cb(error);
                                             });
                                     });
     };
 
     /**
-     * Get the location of the data point with the specified id; 
-     * the retrieved location is passed to the callback function
-     * as a [latitude, longitude] array or null.
+     * Get the location of the data point with the specified Id; the data point
+     * must have been inserted using insertById. The location passed to the
+     * callback function as a [latitude, longitude] array on success/ Null on failure.
      */
     geoFire.prototype.getLocById = function getLocById(id, cb) {
         var self = this;
+
         this._agents.child(id).once('value',
                                     function (snapshot) {
                                         var data = snapshot.val(),
@@ -336,48 +332,81 @@
                                         cb(arg);
                                     });
     };
+    
+    /**
+     * Update the location of the data point with the specified Id; the data
+     * point must have been inserted using insertById. The optional callback
+     * function (if provided) is called with null on success/ Error on failure.
+     */
+    geoFire.prototype.updateLocById = function updateLocById(latLon, id, cb) {
+        var self = this,
+            cb = cb || noop;
+    
+        this._agents.child(id).once('value',
+                                    function (snapshot) {
+                                        var data = snapshot.val();         
+                                        if (data === null) {
+                                            cb(new Error("geoFire.updateLocById error: Invalid Id argument."));
+                                        } else {
+                                            var geohash = data.geohash;
+                                            self._firebase.child(geohash).child(id).remove(function(error) {
+                                                    if (!error) {
+                                                        self.insertById(latLon, id, data, cb);
+                                                    } else 
+                                                        cb(error);
+                                                });
+                                        }
+                                    });
+
+    };
 
     /**
      * Find all data points within the specified radius, in kilometers,
      * from the specified latitude, longitude pair, passed in as an array.
-     * The matching points are returned in distance sorted order.
+     * The matching points are passed to the callback function as an array in distance sorted order.
      */
     geoFire.prototype.searchAroundLoc = function searchAroundLoc(latLon,
                                                                  radius,
+                                                                 setAlert,
                                                                  cb) {
         var hash = encode(latLon);
-        this.searchRadius(hash, radius, cb);
+        this.searchRadius(hash, radius, setAlert, cb);
     };  
-
+    
     /**
-     * Find all data points within the specified radius, in kilometers,                                                                                                                                                             
-     * from the point with the specified id.
-     * The matching points are returned in distance sorted order.
+     * Find all data points within the specified radius, in kilometers,                                                                                                                                         * from the point with the specified id; the point must have been inserted using insertById.
+     * The matching points are passed to the callback function as an array in distance sorted order.
      */
-    geoFire.prototype.searchAroundId = function searchAroundId(id, radius, cb) {
+    geoFire.prototype.searchAroundId = function searchAroundId(id, radius, setAlert, cb) {
         var self = this;
+        
         this._agents.child(id).once('value',
                                   function (snapshot) {
-                                      var data = snapshot.val();
-                                      self.searchRadius(data.geohash, radius, cb);
-                                  });
+                                        var data = snapshot.val();
+                                        if (data === null)
+                                            cb(null);
+                                        else
+                                            self.searchRadius(data.geohash, radius, setAlert, cb);
+                                    });
     };
-
+    
   /**
    * Find all data points within the specified radius, in kilometers,
    * from the point with the specified geohash.
-   * The matching points are returned in distance sorted order.
+   * The matching points are passed to the callback function in distance sorted order.
    */
     geoFire.prototype.searchRadius = function searchRadius(srcHash, radius,
-                                                               cb) {
-        var self = this;
-        var hash = srcHash,
+                                                           setAlert, cb) {
+        var self = this,
+            hash = srcHash,
             neighborPrefixes = [],
             matches = [],
             matchesFiltered = [],
-            i = 0, resultHandler;
+            distDict = {},
+            i = 0,
+            resultHandler;
 
-      // An approximation of the bounding box dimension per hash length.
+        // An approximation of the bounding box dimension per hash length.
         var boundingBoxShortestEdgeByHashLength = [ null, 5003.771699005143,
                                                     625.4714623756429,
                                                     156.36786559391072,
@@ -389,11 +418,11 @@
             zoomLevel -= 1;
         
         hash = hash.substring(0, zoomLevel);
-
+        
         // TODO: Be smarter about this, and only zoom out if actually optimal.
         queries = this.neighbors(hash);
         queries.push(hash);
-
+        
         // Get unique list of neighbor hashes.
         var uniquesObj = {};
         for (var ix = 0; ix < queries.length; ix++) {
@@ -403,10 +432,9 @@
         queries = values(uniquesObj);
         delete uniquesObj;
         
-        resultHandler = function(snapshot) {
+        resultHandler = function(snapshot) {            
             // Compile the results for each of the queries as they return.
             var matchSet = snapshot.val();
-            
             for (var hash in matchSet) {
                 for (var pushId in matchSet[hash]) {
                     matches.push([hash, matchSet[hash][pushId]]);
@@ -414,8 +442,7 @@
             }
 
             // Wait for each of the queries to return before filtering and sorting.
-            if (++i == queries.length) {
-                
+            if (++i >= queries.length) {
                 // Filter the returned queries using the specified radius.
                 for (var jx = 0; jx < matches.length; jx++) {
                     var match = matches[jx],
@@ -424,18 +451,22 @@
                         pointDist = distByHash(srcHash, matchHash);
                     
                     if (pointDist <= radius) {
-                        matchElt.dist = pointDist;
+                        distDict[matchElt] = pointDist;
                         matchesFiltered.push(matchElt);
                     }
                 }
 	      
                 // Sort the results by radius.
                 matchesFiltered.sort(function(a, b) {
-                        return a['dist'] - b['dist'];
+                        return distDict[a] - distDict[b];
                     });
-	      	      
+
                 cb(matchesFiltered);
-            }
+
+                matches = [];
+                matchesFiltered = [];
+                distDict = {};
+           }
         };
 
         for (var ix = 0; ix < queries.length; ix++) {
@@ -444,11 +475,17 @@
             
             endPrefix = startPrefix + "~";
 	  
-            this._firebase
-                .startAt(null, startPrefix)
-                .endAt(null, endPrefix)
-                .on('value', resultHandler);
-        }
+            if (setAlert) {   
+                this._firebase
+                    .startAt(null, startPrefix)
+                    .endAt(null, endPrefix)
+                    .on('value', resultHandler);
+            } else {
+                this._firebase
+                    .startAt(null, startPrefix)
+                    .endAt(null, endPrefix)
+                    .once('value', resultHandler);
+            }
     };
     
     function boxSearch(bbox) {

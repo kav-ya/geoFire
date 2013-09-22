@@ -42,8 +42,9 @@ Storing/ removing data for location queries:
 ------------------------------------------------------------
 ###insertByLoc(latLon, data, [onComplete])
 
-Inserts data solely by location. If the insert is successful, the optional callback function (if provided) is called with a null argument;
-if the insert fails, an error message is printed to console.
+Inserts data solely by location, specified by a [latitude, longitude] array. On
+completion, the optional callback function (if provided) is called with null on
+success/ Error on failure.
 
     var car1 = { id: 1, make: "Tesla" };
 
@@ -55,8 +56,9 @@ if the insert fails, an error message is printed to console.
 
 ###insertById(latLon, id, data, [onComplete])
 
-Inserts data by location and a client-provided identifer. If the insert is successful, the optional callback function (if provided) is called
-with a null argument; if the insert fails, an error message is printed to console.
+Inserts data by location, specified by a [latitude, longitude] array,  and a client-provided identifer.
+On completion, the optional callback function (if provided) is called with null
+on success/ Error on failure.
 **Data that is inserted using this function can be queried using the client-provided Id.**
 
     var car2 = { id: 2, make: "BMW" };
@@ -71,7 +73,7 @@ with a null argument; if the insert fails, an error message is printed to consol
 
 Removes the data point with the specified Id; the data point must have been inserted using `insertById`.
 `removeById` does not return anything; it calls the optional callback function, if provided, with 
-null on success/Error on failure.
+null on success/ Error on failure.
 
     // No callback function.
     geo.removeById(car2.id);
@@ -84,44 +86,51 @@ Performing location queries:
 ###getLocById(id, callback)
 
 Gets the location of the data point with the specified Id; the data point must have been inserted using `insertById`.
-`getLocById` does not return anything; it calls the callback function with the location as a [latitude, longitude] array on success/null on failure.
+`getLocById` does not return anything; the location passed to the callback
+function as a [latitude, longitude] array on success/ Null on failure.  
 
     geo.getLocById(car2.id, function(latLon) { console.log("Lat, Lon = ", latLon[0], latLon[1]); });
 
-###updateLocById(latLon, id)
+###updateLocById(latLon, id, [onComplete])
 
 Updates the location of the data point with the specified Id; the data point must have been inserted using `insertById`.
-`updateLocById` does not return anything on success; on failure, an error message is printed to console.
+`updateLocById` does not return anything. The optional callback function, if provided, is called with null on success/ Error on failure.
     
+    // No callback.
     geo.updateLocById([36.01234, -121.51369], car2.id);
+
+    // With a callback function.
+    geo.updateLocById([36.01234, -121.51369], car2.id, function(error) { if (!error) console.log("Update done!"); });
 
 Performing localized searches:
 -----------------------------
-###searchAroundLoc(latLon, distance, callback)
+###searchAroundLoc(latLon, radius, callback)
 
-Finds all data points that are within the specified distance from the source point. The source point is passed as a [latitude, longitude] array and
-the distance is in kilometers. `searchAroundLoc` does not return anything; it passes an array of the matching data points, **sorted by distance**, to the callback function.
-Each data point in the array is represented as a [latitude, longitude] array.
+Finds all data points within the specified radius, in kilometers, from the
+source point, specified as a [latitude, longitude] array.
+`searchAroundLoc` does not return anything; the matching data points are passed
+to the callback function as an array in **distance sorted order**.
 
     geo.searchAroundLoc([37.771393, -122.447104], 5,
                         function(array) { 
                             for (var i = 0; i < array.length; i++)
-                                console.log("latLon of a found point = ", array[i]);
+                                console.log("A found point = ", array[i]);
                         });
 
-###searchAroundId(id, distance, callback)
+###searchAroundId(id, radius, callback)
 
-Finds all data points that are within the specified distance from the source point. The source point is specified by its Id, hence it must have been inserted using
-`insertById`. The distance is in kilometers. `searchAroundId` does not return anything; it passes an array of the matching data points, **sorted by distance**, to the callback function.
-Each data point in the array is represented as a [latitude, longitude] array.
+Finds all data points within the specified radius, in kilometers, from the
+source point, specified by Id. The source point must have been inserted using `insertById`.
+`searchAroundId` does not return anything; the matching data points are passed
+to the callback function as an array in **distance sorted order**.
 
     geo.searchAroundId(car2.id, 5,
                        function(array) {
                         for (var i = 0; i < array.length; i++)
-                            console.log("latLon of a found point = ", array[i]);
+                            console.log("A found point = ", array[i]);
                        });
 
-**NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles(#km2mileskilometers)**
+**NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles](#km2mileskilometers)**
 
 Location/Geohash conversion:
 ---------------------------
