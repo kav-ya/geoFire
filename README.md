@@ -26,8 +26,8 @@ The geoFire library provides functions to:
     - [updateLocById](#updatelocbyidlatlon-id-oncomplete)
 
   3. [Perform localized searches] (#performing-localized-searches):  
-    - [searchAroundLoc](#searcharoundloclatlon-distance-setalert-callback)  
-    - [searchAroundId](#searcharoundidid-distance-setalert-callback)
+    - [searchAroundLoc](#searcharoundloclatlon-radius-setalert-callback)  
+    - [searchAroundId](#searcharoundidid-radius-setalert-callback)
 
 The library also has helper functions to:  
   4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
