@@ -23,7 +23,7 @@ The geoFire library provides functions to:
 
   2. [Perform location queries](#performing-location-queries):  
     - [getLocById](#getlocbyidid-callback)  
-    - [updateLocById](#updatelocbyidlatlon-id)
+    - [updateLocById](#updatelocbyidlatlon-id-oncomplete)
 
   3. [Perform localized searches] (#performing-localized-searches):  
     - [searchAroundLoc](#searcharoundloclatlon-distance-callback)  
