@@ -486,12 +486,9 @@
                     .endAt(null, endPrefix)
                     .once('value', resultHandler);
             }
+        }
     };
     
-    function boxSearch(bbox) {
-        
-    }
-
     if (typeof module === "undefined") {
         self.geoFire = geoFire;
     } else {
