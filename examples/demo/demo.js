@@ -95,7 +95,7 @@ function drawSearchBtn() {
 function geoFind() {
     var arg = document.getElementById('radius').value;
     var radius = (arg) ? parseInt(arg) : 0;
-    geo.searchAroundLoc([origin["lat"], origin["lon"]], radius, printCars);
+    geo.searchAroundLoc([origin["lat"], origin["lon"]], radius, 0, printCars);
 }
 
 function printCars(results) {

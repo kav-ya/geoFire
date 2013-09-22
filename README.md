@@ -26,8 +26,8 @@ The geoFire library provides functions to:
     - [updateLocById](#updatelocbyidlatlon-id-oncomplete)
 
   3. [Perform localized searches] (#performing-localized-searches):  
-    - [searchAroundLoc](#searcharoundloclatlon-distance-setAlert-callback)  
-    - [searchAroundId](#searcharoundidid-distance-setAlert-callback)
+    - [searchAroundLoc](#searcharoundloclatlon-distance-setalert-callback)  
+    - [searchAroundId](#searcharoundidid-distance-setalert-callback)
 
 The library also has helper functions to:  
   4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
@@ -115,7 +115,7 @@ if the set of data points that are within the radius changes.
 
     // The callback function is called once, with the initial set of search results;
     // it is not called when the set of search results changes.
-    geo.searchAroundLoc([37.771393, -122.447104], 5, **0**,
+    geo.searchAroundLoc([37.771393, -122.447104], 5, 0,
                         function(array) { 
                             for (var i = 0; i < array.length; i++)
                                 console.log("A found point = ", array[i]);
@@ -123,7 +123,7 @@ if the set of data points that are within the radius changes.
 
     // The callback function is called with the initial set of search results and
     // each time the set of search results changes.
-    geo.searchAroundLoc([37.771393, -122.447104], 5, **1**,
+    geo.searchAroundLoc([37.771393, -122.447104], 5, 1,
                         function(array) {
                             for (var i = 0; i < array.length; i++)
                                 console.log("A found point = ", array[i]);
@@ -140,7 +140,7 @@ if the set of data points that are within the radius changes.
 
     // The callback function is called once, with the initial set of search results;
     // it is not called when the set of search results changes.
-    geo.searchAroundId(car2.id, 5, **0**,
+    geo.searchAroundId(car2.id, 5, 0,
                        function(array) {
                         for (var i = 0; i < array.length; i++)
                             console.log("A found point = ", array[i]);
@@ -148,7 +148,7 @@ if the set of data points that are within the radius changes.
 
     // The callback function is called with the initial set of search results and
     // each time the set of search results changes.
-    geo.searchAroundId(car2.id, 5, **1**,
+    geo.searchAroundId(car2.id, 5, 1,
                        function(array) {
                         for (var i = 0; i < array.length; i++)
                             console.log("A found point = ", array[i]);

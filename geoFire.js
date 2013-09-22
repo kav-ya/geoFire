@@ -1,3 +1,10 @@
+// geoFire is a helper library for location-based operations in Firebase.
+// It provides functions to store data for location querying in Firebase,
+// and perform location queries such as location updates and localized searches.
+// geoFire stores the location coordinates of a data point as a geohash
+// (http://en.wikipedia.org/wiki/Geohash) in Firebase.
+
+
 (function () {  
     var BITS = [16, 8, 4, 2, 1];
     
