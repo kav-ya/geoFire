@@ -364,6 +364,8 @@
      * Find all data points within the specified radius, in kilometers,
      * from the specified latitude, longitude pair, passed in as an array.
      * The matching points are passed to the callback function as an array in distance sorted order.
+     * If the setAlert flag is set, the callback function is called each time the search results change i.e.
+     * if the set of data points that are within the radius changes.
      */
     geoFire.prototype.searchAroundLoc = function searchAroundLoc(latLon,
                                                                  radius,
@@ -376,6 +378,8 @@
     /**
      * Find all data points within the specified radius, in kilometers,                                                                                                                                         * from the point with the specified id; the point must have been inserted using insertById.
      * The matching points are passed to the callback function as an array in distance sorted order.
+     * If the setAlert flag is set, the callback function is called each time the search results change i.e.
+     * if the set of data points that are within the radius changes.
      */
     geoFire.prototype.searchAroundId = function searchAroundId(id, radius, setAlert, cb) {
         var self = this;
@@ -394,6 +398,8 @@
    * Find all data points within the specified radius, in kilometers,
    * from the point with the specified geohash.
    * The matching points are passed to the callback function in distance sorted order.
+   * If the setAlert flag is set, the callback function is called each time the search results change i.e.
+   * if the set of data points that are within the radius changes.
    */
     geoFire.prototype.searchRadius = function searchRadius(srcHash, radius,
                                                            setAlert, cb) {
