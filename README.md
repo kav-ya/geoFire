@@ -52,7 +52,7 @@ success/ Error on failure.
     geo.insertByLoc([37.771393, -122.447104], car1); 
 
      // With a callback function.
-    geo.insertByLoc([37.771393, -122.447104], car1, function() { console.log("Insert done!"); });
+    geo.insertByLoc([37.771393, -122.447104], car1, function(error) { if (!error) console.log("Insert done!"); });
 
 ###insertById(latLon, id, data, [onComplete])
 
@@ -67,7 +67,7 @@ on success/ Error on failure.
     geo.insertById([37.780314, -122.513698], car2.id, car2);
 
     // With a callback function.
-    geo.insertById([37.780314, -122.513698], car2.id, car2, function() { console.log("Insert done!); });
+    geo.insertById([37.780314, -122.513698], car2.id, car2, function(error) { if (!error) console.log("Insert done!); });
 
 ###removeById(id, [onComplete])
 
@@ -89,7 +89,7 @@ Gets the location of the data point with the specified Id; the data point must h
 `getLocById` does not return anything; the location passed to the callback
 function as a [latitude, longitude] array on success/ Null on failure.  
 
-    geo.getLocById(car2.id, function(latLon) { console.log("Lat, Lon = ", latLon[0], latLon[1]); });
+    geo.getLocById(car2.id, function(latLon) { if (latLon) console.log("Lat, Lon = ", latLon[0], latLon[1]); });
 
 ###updateLocById(latLon, id, [onComplete])
 
