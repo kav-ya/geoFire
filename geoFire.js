@@ -37,6 +37,8 @@
     };
 
     var noop = function() {};
+
+    var onSearches = {};
     
     /**
      * Generate a geohash of the specified precision/string length
@@ -254,8 +256,8 @@
         this._firebase = firebaseRef.child('geoFire').child('dataByHash');
         this._agents = firebaseRef.child('geoFire').child('dataById');
     }
-
-    geoFire.prototype.encode = geoFire.encode = encode;
+    
+    .prototype.encode = geoFire.encode = encode;
     geoFire.prototype.decode = geoFire.decode = decode;
     geoFire.prototype.dimensions = geoFire.dimensions = dimensions;
     geoFire.prototype.dist = geoFire.dist = dist;
@@ -371,8 +373,8 @@
      * Find all data points within the specified radius, in kilometers,
      * from the specified latitude, longitude pair, passed in as an array.
      * The matching points are passed to the callback function as an array in distance sorted order.
-     * If the setAlert flag is set, the callback function is called each time the search results change i.e.
-     * if the set of data points that are within the radius changes.
+     * The callback function is called once, with the initial set of search results;
+     * it is not called when the set of search results changes.
      */
     geoFire.prototype.getPointsNearLoc = function getPointsNearLoc(latLon,
                                                                    radius,
@@ -381,7 +383,14 @@
         var hash = encode(latLon);
         this.searchRadius(hash, radius, 0, cb);
     };
-    
+
+    /**                                                                                                                                                                                                                                                                                                 
+     * Find all data points within the specified radius, in kilometers,                                                                                                                                                                                                                                 
+     * from the specified latitude, longitude pair, passed in as an array.                                                                                                                                                                                                                              
+     * The matching points are passed to the callback function as an array in distance sorted order.       
+     * The callback function is called with the initial set of search results and
+     * each time the set of search results changes.
+    */
     geoFire.prototype.onPointsNearLoc = function onPointsNearLoc(latLon,
                                                                  radius,
                                                                  cb) {
@@ -391,10 +400,10 @@
 
     /**
      * Find all data points within the specified radius, in kilometers,
-     * from the point with the specified id; the point must have been inserted using insertByLocWithId.
+     * from the point with the specified Id; the point must have been inserted using insertByLocWithId.
      * The matching points are passed to the callback function as an array in distance sorted order.
-     * If the setAlert flag is set, the callback function is called each time the search results change i.e.
-     * if the set of data points that are within the radius changes.
+     * The callback function is called once, with the initial set of search results;
+     * it is not called when the set of search results changes.
      */
     geoFire.prototype.getPointsNearId = function getPointsNearId(id, radius,
                                                                  cb) {
@@ -409,6 +418,13 @@
                                     });
     }
 
+    /**                                                                                                                                                                                                                                                                                                 
+     * Find all data points within the specified radius, in kilometers,                                                                                                                                                                                                                                 
+     * from the point with the specified Id; the point must have been inserted using insertByLocWithId.                                                                                                                                                                                                 
+     * The matching points are passed to the callback function as an array in distance sorted order. 
+     * The callback function is called with the initial set of search results and                                                                                                                                                                                                                       
+     * each time the set of search results changes. 
+     */
     geoFire.prototype.onPointsNearId = function onPointsNearId(id, radius, cb) {
         var self = this;
         this._agents.child(id).once('value',
@@ -508,7 +524,12 @@
             
             endPrefix = startPrefix + "~";
 	  
-            if (setAlert) {   
+            if (setAlert) {
+                if (srcHash in onSearches)
+                    onSearches[srcHash].push(startPrefix);
+                else
+                    onSearches[srcHash] = [startPrefix];
+
                 this._firebase
                     .startAt(null, startPrefix)
                     .endAt(null, endPrefix)
@@ -522,6 +543,23 @@
         }
     };
     
+    // TODO
+    function offPointsNearLoc(loc, radius, cb) {
+
+    }
+
+    function offPointsNearId(id, radius, cb) {
+
+    }
+
+    function cancelSearch(srcHash, radius, cb) {
+        onSearches[srcHash]
+        this._firebase
+            .startAt(null, startPrefix)
+            .endAt(null, endPrefix)
+            .on('value', resultHandler);
+    }
+
     if (typeof module === "undefined") {
         self.geoFire = geoFire;
     } else {
