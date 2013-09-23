@@ -285,7 +285,7 @@
      * function (if provided) is called with null on success/ Error on failure. 
      * Data inserted using this function can be queried by location or by id. 
      */
-    geoFire.prototype.insertById = function insertById(latLon, id, data, cb) {
+    geoFire.prototype.insertByLocWithId = function insertByLocWithId(latLon, id, data, cb) {
         var self = this,
             cb = cb || noop,
             geohash = encode(latLon);
@@ -305,7 +305,7 @@
     
     /**
      * Remove the data point with the specified Id; the data point must have
-     * been inserted using insertById. On completion, the optional callback
+     * been inserted using insertByLocWithId. On completion, the optional callback
      * function (if provided) is called with null on success/ Error on failure.
      */
     geoFire.prototype.removeById = function removeById(id, cb) {
@@ -326,7 +326,7 @@
 
     /**
      * Get the location of the data point with the specified Id; the data point
-     * must have been inserted using insertById. The location passed to the
+     * must have been inserted using insertByLocWithId. The location passed to the
      * callback function as a [latitude, longitude] array on success/ Null on failure.
      */
     geoFire.prototype.getLocById = function getLocById(id, cb) {
@@ -342,10 +342,10 @@
     
     /**
      * Update the location of the data point with the specified Id; the data
-     * point must have been inserted using insertById. The optional callback
+     * point must have been inserted using insertByLocWithId. The optional callback
      * function (if provided) is called with null on success/ Error on failure.
      */
-    geoFire.prototype.updateLocById = function updateLocById(latLon, id, cb) {
+    geoFire.prototype.updateLocForId = function updateLocForId(latLon, id, cb) {
         var self = this,
             cb = cb || noop;
     
@@ -353,12 +353,12 @@
                                     function (snapshot) {
                                         var data = snapshot.val();         
                                         if (data === null) {
-                                            cb(new Error("geoFire.updateLocById error: Invalid Id argument."));
+                                            cb(new Error("geoFire.updateLocForId error: Invalid Id argument."));
                                         } else {
                                             var geohash = data.geohash;
                                             self._firebase.child(geohash).child(id).remove(function(error) {
                                                     if (!error) {
-                                                        self.insertById(latLon, id, data, cb);
+                                                        self.insertByLocWithId(latLon, id, data, cb);
                                                     } else 
                                                         cb(error);
                                                 });
@@ -383,7 +383,7 @@
     };  
     
     /**
-     * Find all data points within the specified radius, in kilometers,                                                                                                                                         * from the point with the specified id; the point must have been inserted using insertById.
+     * Find all data points within the specified radius, in kilometers,                                                                                                                                         * from the point with the specified id; the point must have been inserted using insertByLocWithId.
      * The matching points are passed to the callback function as an array in distance sorted order.
      * If the setAlert flag is set, the callback function is called each time the search results change i.e.
      * if the set of data points that are within the radius changes.
