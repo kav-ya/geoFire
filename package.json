@@ -1,7 +1,7 @@
 {
   "name": "geoFire",
   "title": "geoFire",
-  "description": "Geoqueries with Firebase and geohashes",
+  "description": "Location based operations in Firebase",
   "private": true,
   "licenses": [
     {
