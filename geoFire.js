@@ -374,32 +374,52 @@
      * If the setAlert flag is set, the callback function is called each time the search results change i.e.
      * if the set of data points that are within the radius changes.
      */
-    geoFire.prototype.searchAroundLoc = function searchAroundLoc(latLon,
+    geoFire.prototype.getPointsNearLoc = function getPointsNearLoc(latLon,
+                                                                   radius,
+                                                                   cb) {
+        
+        var hash = encode(latLon);
+        this.searchRadius(hash, radius, 0, cb);
+    };
+    
+    geoFire.prototype.onPointsNearLoc = function onPointsNearLoc(latLon,
                                                                  radius,
-                                                                 setAlert,
                                                                  cb) {
         var hash = encode(latLon);
-        this.searchRadius(hash, radius, setAlert, cb);
-    };  
-    
+        this.searchRadius(hash, radius, 1, cb);
+    }
+
     /**
-     * Find all data points within the specified radius, in kilometers,                                                                                                                                         * from the point with the specified id; the point must have been inserted using insertByLocWithId.
+     * Find all data points within the specified radius, in kilometers,
+     * from the point with the specified id; the point must have been inserted using insertByLocWithId.
      * The matching points are passed to the callback function as an array in distance sorted order.
      * If the setAlert flag is set, the callback function is called each time the search results change i.e.
      * if the set of data points that are within the radius changes.
      */
-    geoFire.prototype.searchAroundId = function searchAroundId(id, radius, setAlert, cb) {
+    geoFire.prototype.getPointsNearId = function getPointsNearId(id, radius,
+                                                                 cb) {
         var self = this;
-        
         this._agents.child(id).once('value',
-                                  function (snapshot) {
+                                    function (snapshot) {
                                         var data = snapshot.val();
                                         if (data === null)
                                             cb(null);
                                         else
-                                            self.searchRadius(data.geohash, radius, setAlert, cb);
+                                            self.searchRadius(data.geohash, radius, 0, cb);
                                     });
-    };
+    }
+
+    geoFire.prototype.onPointsNearId = function onPointsNearId(id, radius, cb) {
+        var self = this;
+        this._agents.child(id).once('value',
+                                    function (snapshot) {
+                                        var data = snapshot.val();
+                                        if (data === null)
+                                            cb(null);
+                                        else
+                                            self.searchRadius(data.geohash, radius, 1, cb);
+                                    });
+    }
     
   /**
    * Find all data points within the specified radius, in kilometers,

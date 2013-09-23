@@ -26,8 +26,10 @@ The geoFire library provides functions to:
     - [updateLocForId](#updatelocforidlatlon-id-oncomplete)
 
   3. [Perform localized searches] (#performing-localized-searches):  
-    - [searchAroundLoc](#searcharoundloclatlon-radius-setalert-callback)  
-    - [searchAroundId](#searcharoundidid-radius-setalert-callback)
+    - [getPointsNearLoc](#getpointsnearloclatlon-radius-callback)  
+    - [onPointsNearLoc](#onpointsnearloclatlon-radius-callback)
+    - [getPointsNearId](#getpointsnearidid-radius-callback)
+    - [onPointsNearId](#onpointsnearidid-radius-callback)
 
 The library also has helper functions to:  
   4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
@@ -104,61 +106,71 @@ Updates the location of the data point with the specified Id; the data point mus
 
 Performing localized searches:
 -----------------------------
-###searchAroundLoc(latLon, radius, setAlert, callback)
+###getPointsNearLoc(latLon, radius, callback)
 
 Finds all data points within the specified radius, in kilometers, from the
 source point, specified as a [latitude, longitude] array.
-`searchAroundLoc` does not return anything; the matching data points are passed
+The function does not return anything; the matching data points are passed
 to the callback function as an array in **distance sorted order**.  
-If the setAlert flag is set, the callback function is called each time the search results change i.e.
-if the set of data points that are within the radius changes.
+**The callback function is called once, with the initial set of search results;
+it is not called when the set of search results changes.**
 
-    // The callback function is called once, with the initial set of search results;
-    // it is not called when the set of search results changes.
-    geo.searchAroundLoc([37.771393, -122.447104], 5, 0,
+    geo.getPointsNearLoc([37.771393, -122.447104], 5,
                         function(array) { 
                             for (var i = 0; i < array.length; i++)
                                 console.log("A found point = ", array[i]);
                         });
 
-    // The callback function is called with the initial set of search results and
-    // each time the set of search results changes.
-    geo.searchAroundLoc([37.771393, -122.447104], 5, 1,
+###onPointsNearLoc(latLon, radius, callback)
+
+Finds all data points within the specified radius, in kilometers, from the
+source point, specified as a [latitude, longitude] array.
+The function does not return anything; the matching data points are passed
+to the callback function as an array in **distance sorted order**.
+**The callback function is called with the initial set of search results and
+each time the set of search results changes.**
+
+    geo.onPointsNearLoc([37.771393, -122.447104], 5,
                         function(array) {
                             for (var i = 0; i < array.length; i++)
                                 console.log("A found point = ", array[i]);
             });
 
-###searchAroundId(id, radius, setAlert, callback)
+###getPointsNearId(id, radius, callback)
 
 Finds all data points within the specified radius, in kilometers, from the
 source point, specified by Id. The source point must have been inserted using `insertByLocWithId`.
-`searchAroundId` does not return anything; the matching data points are passed
+The function does not return anything; the matching data points are passed
 to the callback function as an array in **distance sorted order**.  
-If the setAlert flag is set, the callback function is called each time the search results change i.e.
-if the set of data points that are within the radius changes.
+**The callback function is called once, with the initial set of search results;
+it is not called when the set of search results changes.**
 
-    // The callback function is called once, with the initial set of search results;
-    // it is not called when the set of search results changes.
-    geo.searchAroundId(car2.id, 5, 0,
+    geo.getPointsNearId(car2.id, 5,
                        function(array) {
                         for (var i = 0; i < array.length; i++)
                             console.log("A found point = ", array[i]);
                        });
 
-    // The callback function is called with the initial set of search results and
-    // each time the set of search results changes.
-    geo.searchAroundId(car2.id, 5, 1,
+###onPointsNearId(id, radius, callback)
+
+Finds all data points within the specified radius, in kilometers, from the
+source point, specified by Id. The source point must have been inserted using `insertByLocWithId`.
+The function does not return anything; the matching data points are passed
+to the callback function as an array in **distance sorted order**.
+**The callback function is called with the initial set of search results and
+each time the set of search results changes.**
+
+    geo.onPointsNearId(car2.id, 5,
                        function(array) {
                         for (var i = 0; i < array.length; i++)
                             console.log("A found point = ", array[i]);
                        });
 
-**NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles](#km2mileskilometers)**
+**NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles](#km2mileskilometers).**
 
 Location/Geohash conversion:
 ---------------------------
-NOTE: You probably don't need the functions in this section
+**NOTE: You probably don't need the functions in this section.**
 
 A geohash is a string representation of a location coordinate which is generated by interleaving the
 bit representations of the latitude and longitude pair and base32-encoding the result.  
