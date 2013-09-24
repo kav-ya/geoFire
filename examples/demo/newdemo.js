@@ -30,7 +30,7 @@ idRef.on("child_changed", function(snapshot) {
         }
         else {
             console.log("Going to call animatedMoveTo");
-            var loc = geo.decode(snapshot.val().geohash);
+            var loc = geoRef.decode(snapshot.val().geohash);
             marker.animatedMoveTo(loc[0], loc[1]);//snapshot.val().lat, snapshot.val().lon);
         }
     });
