@@ -5,6 +5,8 @@ var geoRef = new Firebase("https://munigeo.firebaseio.com/sf-muni/geo/geoFire");
 var hashRef = geoRef.child("/dataByHash");
 var idRef = geoRef.child("/dataById");
 
+var geo = new geoFire(geoRef);
+
 function initialize() {
     loc = new google.maps.LatLng(37.7789, -122.3917);
     var mapOptions = {
@@ -30,7 +32,7 @@ idRef.on("child_changed", function(snapshot) {
         }
         else {
             console.log("Going to call animatedMoveTo");
-            var loc = geoRef.decode(snapshot.val().geohash);
+            var loc = geo.decode(snapshot.val().geohash);
             marker.animatedMoveTo(loc[0], loc[1]);//snapshot.val().lat, snapshot.val().lon);
         }
     });
