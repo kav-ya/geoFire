@@ -5,8 +5,6 @@ var geoRef = new Firebase("https://munigeo.firebaseio.com/sf-muni/geo/geoFire");
 var hashRef = geoRef.child("/dataByHash");
 var idRef = geoRef.child("/dataById");
 
-var geo = new geoFire(geoRef);
-
 function initialize() {
     loc = new google.maps.LatLng(37.7789, -122.3917);
     var mapOptions = {
@@ -32,8 +30,8 @@ idRef.on("child_changed", function(snapshot) {
         }
         else {
             console.log("Going to call animatedMoveTo");
-            var loc = geo.decode(snapshot.val().geohash);
-            marker.animatedMoveTo(loc[0], loc[1]);//snapshot.val().lat, snapshot.val().lon);
+            var loc = geoFire.decode(snapshot.val().geohash);
+            marker.animatedMoveTo(loc[0], loc[1]);
         }
     });
 
@@ -71,7 +69,6 @@ function feq (f1, f2) {
     return (Math.abs(f1 - f2) < 0.000001);
 }
 
-
 // Vikrum's hack to animate/move the Marker class                                                                                                                                                
 // based on http://stackoverflow.com/a/10906464 
 google.maps.Marker.prototype.animatedMoveTo = function(toLat, toLng) {
@@ -105,10 +102,4 @@ google.maps.Marker.prototype.animatedMoveTo = function(toLat, toLng) {
     
     // begin animation, send back to origin after completion
     move(this, frames, 0, 25);
-}
-    
-function Car(id, make, color, lat, lon) {
-    this.id = id;
-    this.make = make;
-    this.color = color;
 }

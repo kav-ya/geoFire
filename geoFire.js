@@ -453,7 +453,7 @@
             matches = [],
             matchesFiltered = [],
             distDict = {},
-            i = 0,
+        i = 0;
         //resultHandler;
 
         // An approximation of the bounding box dimension per hash length.
@@ -555,10 +555,9 @@
                                                                    cb) {
             var hash = encode(latLon);
             this.cancelSearch(hash, radius, cb);
-        }
     }
-
-    function offPointsNearId(id, radius, cb) {
+    
+    geoFire.prototype.offPointsNearId = function offPointsNearId(id, radius, cb) {
         var self = this;
         this._agents.child(id).once('value',
                                     function (snapshot) {
@@ -570,21 +569,21 @@
                                     });
     }
 
-    function cancelSearch(srcHash, radius, cb) {
+    geoFire.prototype.cancelSearch = function cancelSearch(srcHash, radius, cb) {
         if (!([srcHash, radius] in onSearches))
             return; //throw new Error();
-
+        
         var searchRecord = onSearches[[srcHash, radius]],
-            prefixes = searchRecord.prefixes;
+        prefixes = searchRecord.prefixes;
         
         if (searchRecord.count <= 0)
             return; //throw new Error();
-
+        
         for (var i = 0; i < prefixes.length; i++) {
             var startPrefix = prefixes[i];
             var endPrefix = startPrefix;
             endPrefix = startPrefix + "~";
-
+            
             this._firebase
                 .startAt(null, startPrefix)
                 .endAt(null, endPrefix)
@@ -593,7 +592,7 @@
 
         searchRecord.count -= 1;
     }
-
+    
     if (typeof module === "undefined") {
         self.geoFire = geoFire;
     } else {
