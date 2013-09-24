@@ -1,34 +1,98 @@
 <!DOCTYPE HTML>
 <html>
-
 <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANQ0KPuNhYNPwxfX4NRkJZ25jEWGK35q8&sensor=false"></script>
-    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
-    <script src="../../geoFire.js"></script>
-    <link href="demo.css" rel="stylesheet">
-    <script src="newdemo.js"></script>
 
-    <script type="text/javascript">      
-      google.maps.event.addDomListener(window, 'load', initialize);
-    </script>
+    <!-- STYLESHEETS -->
+    <link href="css/animate.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/buttons.css" rel="stylesheet">
+    <link href="css/site.css" rel="stylesheet">
 </head>
 
 <body>
-        <div id="map-canvas"></div>
-            <div id="brand">
-                <a href="https://twitter.com/share" class="twitter-share-button" data-via="Firebase" data-size="large">Tweet</a>
-                  <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                geoFire<br>A geospatial library for Firebase
-            </div>
-            <div id="container">
-                <div id="title"></div>
-                <div id="console"></div>
-                <div id="centerdiv"></div>
-                <div id="behindtitle"></div>
-                <div id="behind"></div>
-            </div>
-        </div>
-</body>
+    <div id="map-canvas"></div>
 
+    <!-- SIDE BAR -->
+    <div id="sidebar-wrapper"></div>
+    <article id="sidebar">
+        <header>
+            <h1>GeoFire</h1>
+            <h2><a target="_blank" href="http://www.firebase.com">by Firebase</a></h2>
+        </header>
+
+        <section class="content">
+            <p>
+                The example is using the <strong>geofence</strong> method in geofire to update
+                an area of the map in realtime.
+            </p>
+
+            <h3>API Methods</h3>
+            <dl>
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+
+                <dt>insertByLoc()</dt>
+                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+            </dl>
+        </section>
+
+        <footer>
+            <a href="#" class="button button-large button-block button-primary button-rounded"><i class="icon-github"></i> Download</a>
+        </footer>
+    </article>
+
+
+    <!-- OLD SIDEBAR -->
+    <div id="social-bar">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-via="Firebase" data-size="large">Tweet</a>
+          <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+    </div>
+
+    <div id="container">
+        <div id="title"></div>
+        <div id="console"></div>
+        <div id="centerdiv"></div>
+        <div id="behindtitle"></div>
+        <div id="behind"></div>
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyANQ0KPuNhYNPwxfX4NRkJZ25jEWGK35q8&sensor=false"></script>
+    <script src="https://cdn.firebase.com/v0/firebase.js"></script>
+    <script src="../../geoFire.js"></script>
+    <script src="newdemo.js"></script>
+
+    <script type="text/javascript">
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+</body>
 </html>

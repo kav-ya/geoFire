@@ -1,0 +1,137 @@
+@import "compass/css3";
+@import "compass/reset";
+
+
+////////////////////////////////////////////////////
+// LAYOUT //////////////////////////////////////////
+////////////////////////////////////////////////////
+html, body, #map-canvas {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+////////////////////////////////////////////////////
+// SOCIAL BAR //////////////////////////////////////
+////////////////////////////////////////////////////
+#social-bar {
+	position: fixed;
+	top: 20px;
+	right: 360px;
+	z-index: 50;
+}
+
+
+
+////////////////////////////////////////////////////
+// SIDEBAR /////////////////////////////////////////
+////////////////////////////////////////////////////
+#sidebar-wrapper {
+	@include opacity(.2);
+	background: #FFF;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 500;
+	width: 310px;
+	border-left: 1px solid #FFF;
+}
+#sidebar {
+	@include opacity(.9);
+	@include border-radius(3px);
+	@include box-shadow(0px 1px 3px rgba(0, 0, 0, .2));
+	background: #FFF;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 1000;
+	width: 300px;
+
+	header {
+		background: #F9CE4E;
+		height: 36px;
+		color: #FFF;
+		padding: 15px;
+
+		h1 {
+			background: url('../images/logo.png') top left no-repeat;
+			font-size: 28px;
+			line-height: 36px;
+			font-weight: bold;
+			text-align: left;
+			padding-left: 40px;
+			margin: 0px auto;
+			color: #111;
+			text-shadow: 0px 1px 0px rgba(255, 255, 255, .3);
+		}
+		h2 {
+			font-size: 11px;
+			position: absolute;
+			top: 5px;
+			right: 10px;
+		}
+	}
+
+	.content {
+		padding: 20px;
+		position: absolute;
+		top: 66px;
+		bottom: 58px;
+		left: 0px;
+		right: 0px;
+		z-index: 2;
+		overflow: auto;
+		color: #41403E;
+
+		strong {
+			font-weight: bold;
+			color: #010101;
+		}
+
+		h3 {
+			font-weight: bold;
+			font-size: 18px;
+			color: #010101;
+			margin: 40px 0px 20px 0px;
+		}
+
+		p {
+			margin-bottom: 20px;
+			line-height: 24px;
+			font-size: 14px;
+		}
+
+		dl {
+			font-size: 12px;
+
+			dt {
+				font-weight: bold;
+				margin-bottom: 5px;
+				font-size: 13px;
+				color: #010101;
+			}
+
+			dd {
+				line-height: 22px;
+				margin-bottom: 20px;
+			}
+		}
+
+
+
+	}
+
+	footer {
+		@include border-radius(0px 0px 3px 3px);
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		z-index: 1;
+		background: #EFEFEF;
+		padding: 10px;
+	}
+}
