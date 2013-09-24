@@ -38,6 +38,7 @@
 
     var noop = function() {};
 
+    var resultHandler;
     var onSearches = {};
     
     /**
@@ -384,10 +385,10 @@
         this.searchRadius(hash, radius, 0, cb);
     };
 
-    /**                                                                                                                                                                                                                                                                                                 
-     * Find all data points within the specified radius, in kilometers,                                                                                                                                                                                                                                 
-     * from the specified latitude, longitude pair, passed in as an array.                                                                                                                                                                                                                              
-     * The matching points are passed to the callback function as an array in distance sorted order.       
+    /**
+     * Find all data points within the specified radius, in kilometers,
+     * from the specified latitude, longitude pair, passed in as an array.
+     * The matching points are passed to the callback function as an array in distance sorted order.
      * The callback function is called with the initial set of search results and
      * each time the set of search results changes.
     */
@@ -418,11 +419,11 @@
                                     });
     }
 
-    /**                                                                                                                                                                                                                                                                                                 
-     * Find all data points within the specified radius, in kilometers,                                                                                                                                                                                                                                 
-     * from the point with the specified Id; the point must have been inserted using insertByLocWithId.                                                                                                                                                                                                 
+    /**                                                                                             
+     * Find all data points within the specified radius, in kilometers,                           
+     * from the point with the specified Id; the point must have been inserted using insertByLocWithId.
      * The matching points are passed to the callback function as an array in distance sorted order. 
-     * The callback function is called with the initial set of search results and                                                                                                                                                                                                                       
+     * The callback function is called with the initial set of search results and
      * each time the set of search results changes. 
      */
     geoFire.prototype.onPointsNearId = function onPointsNearId(id, radius, cb) {
@@ -453,7 +454,7 @@
             matchesFiltered = [],
             distDict = {},
             i = 0,
-            resultHandler;
+        //resultHandler;
 
         // An approximation of the bounding box dimension per hash length.
         var boundingBoxShortestEdgeByHashLength = [ null, 5003.771699005143,
@@ -518,17 +519,14 @@
            }
         };
 
+        var prefixList = [];
         for (var ix = 0; ix < queries.length; ix++) {
             var startPrefix = queries[ix].substring(0, zoomLevel);
             var endPrefix = startPrefix;
-            
             endPrefix = startPrefix + "~";
 	  
             if (setAlert) {
-                if (srcHash in onSearches)
-                    onSearches[srcHash].push(startPrefix);
-                else
-                    onSearches[srcHash] = [startPrefix];
+                prefixList.push(startPrefix);
 
                 this._firebase
                     .startAt(null, startPrefix)
@@ -541,23 +539,59 @@
                     .once('value', resultHandler);
             }
         }
+        
+        if (setAlert) {
+            if ([srcHash, radius] in onSearches)
+                //onSearches[[srcHash, radius]].push(prefixList);
+                onSearches[[srcHash, radius]].count += 1;
+            else {
+                var searchRecord = { prefixes: prefixList, count: 1 };
+                onSearches[[srcHash, radius]] = searchRecord;
+            }
+        }
     };
     
-    // TODO
-    function offPointsNearLoc(loc, radius, cb) {
-
+    geoFire.prototype.offPointsNearLoc = function offPointsNearLoc(latLon, radius,
+                                                                   cb) {
+            var hash = encode(latLon);
+            this.cancelSearch(hash, radius, cb);
+        }
     }
 
     function offPointsNearId(id, radius, cb) {
-
+        var self = this;
+        this._agents.child(id).once('value',
+                                    function (snapshot) {
+                                        var data = snapshot.val();
+                                        if (data === null)
+                                            return; //cb(null);
+                                        else
+                                            self.cancelSearch(data.geohash, radius, cb);
+                                    });
     }
 
     function cancelSearch(srcHash, radius, cb) {
-        onSearches[srcHash]
-        this._firebase
-            .startAt(null, startPrefix)
-            .endAt(null, endPrefix)
-            .on('value', resultHandler);
+        if (!([srcHash, radius] in onSearches))
+            return; //throw new Error();
+
+        var searchRecord = onSearches[[srcHash, radius]],
+            prefixes = searchRecord.prefixes;
+        
+        if (searchRecord.count <= 0)
+            return; //throw new Error();
+
+        for (var i = 0; i < prefixes.length; i++) {
+            var startPrefix = prefixes[i];
+            var endPrefix = startPrefix;
+            endPrefix = startPrefix + "~";
+
+            this._firebase
+                .startAt(null, startPrefix)
+                .endAt(null, endPrefix)
+                .off('value', resultHandler);
+        }
+
+        searchRecord.count -= 1;
     }
 
     if (typeof module === "undefined") {

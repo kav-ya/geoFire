@@ -9,12 +9,7 @@
     <link href="demo.css" rel="stylesheet">
     <script src="newdemo.js"></script>
 
-    <script type="text/javascript">
-      var id = randomString(10);
-      var geoLink = 'https://'+id+'.firebaseio-demo.com/demo';
-      var geoShowRef = new Firebase(geoLink);
-          geoShow = new geoFire(geoShowRef);
-      
+    <script type="text/javascript">      
       google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 </head>
