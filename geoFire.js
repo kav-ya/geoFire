@@ -257,7 +257,7 @@
         this._agents = firebaseRef.child('geoFire').child('dataById');
     }
     
-    .prototype.encode = geoFire.encode = encode;
+    geoFire.prototype.encode = geoFire.encode = encode;
     geoFire.prototype.decode = geoFire.decode = decode;
     geoFire.prototype.dimensions = geoFire.dimensions = dimensions;
     geoFire.prototype.dist = geoFire.dist = dist;
