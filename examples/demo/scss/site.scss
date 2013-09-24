@@ -1,6 +1,11 @@
 @import "compass/css3";
 @import "compass/reset";
 
+////////////////////////////////////////////////////
+// VARS ////////////////////////////////////////////
+////////////////////////////////////////////////////
+$color-dark: #41403E;
+$baseline: 24px;
 
 ////////////////////////////////////////////////////
 // LAYOUT //////////////////////////////////////////
@@ -39,7 +44,6 @@ html, body, #map-canvas {
 	border-left: 1px solid #FFF;
 }
 #sidebar {
-	@include opacity(.9);
 	@include border-radius(3px);
 	@include box-shadow(0px 1px 3px rgba(0, 0, 0, .2));
 	background: #FFF;
@@ -51,35 +55,49 @@ html, body, #map-canvas {
 	width: 300px;
 
 	header {
+		@include box-shadow(0px 1px 2px rgba(0, 0, 0, .2));
 		background: #F9CE4E;
 		height: 36px;
 		color: #FFF;
 		padding: 15px;
+		border-bottom: 1px solid #eab914;
+		position: relative;
 
 		h1 {
-			background: url('../images/logo.png') top left no-repeat;
-			font-size: 28px;
-			line-height: 36px;
-			font-weight: bold;
-			text-align: left;
-			padding-left: 40px;
+			font-size: 30px;
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+			line-height: 30px;
+			font-weight: lighter;
+			text-align: center;
 			margin: 0px auto;
-			color: #111;
+			color: #c39302;
 			text-shadow: 0px 1px 0px rgba(255, 255, 255, .3);
 		}
 		h2 {
+			font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
 			font-size: 11px;
 			position: absolute;
-			top: 5px;
+			bottom: 5px;
 			right: 10px;
+			z-index: 1;
+
+			a {
+				text-decoration: none;
+				color: #c39302;
+
+				&:hover {
+					text-decoration: underline;
+					color: #50B1FF;
+				}
+			}
 		}
 	}
 
 	.content {
-		padding: 20px;
+		padding: 30px 20px;
 		position: absolute;
-		top: 66px;
-		bottom: 58px;
+		top: 67px;
+		bottom: 61px;
 		left: 0px;
 		right: 0px;
 		z-index: 2;
@@ -88,35 +106,35 @@ html, body, #map-canvas {
 
 		strong {
 			font-weight: bold;
-			color: #010101;
+			color: $color-dark;
 		}
 
 		h3 {
 			font-weight: bold;
 			font-size: 18px;
-			color: #010101;
-			margin: 40px 0px 20px 0px;
+			color: $color-dark;
+			margin: 0px 0px 10px 0px;
+			line-height: $baseline;
 		}
 
 		p {
-			margin-bottom: 20px;
-			line-height: 24px;
+			margin-bottom: 40px;
+			line-height: $baseline;
 			font-size: 14px;
 		}
 
 		dl {
-			font-size: 12px;
-
 			dt {
 				font-weight: bold;
-				margin-bottom: 5px;
 				font-size: 13px;
-				color: #010101;
+				color: #408ECC;
+				line-height: $baseline;
 			}
 
 			dd {
-				line-height: 22px;
+				line-height: $baseline;
 				margin-bottom: 20px;
+				font-size: 13px;
 			}
 		}
 
@@ -125,6 +143,7 @@ html, body, #map-canvas {
 	}
 
 	footer {
+		@include box-shadow(0px -1px 2px rgba(0, 0, 0, .15));
 		@include border-radius(0px 0px 3px 3px);
 		position: absolute;
 		bottom: 0px;
@@ -133,5 +152,6 @@ html, body, #map-canvas {
 		z-index: 1;
 		background: #EFEFEF;
 		padding: 10px;
+		border-top: 1px solid #EEE;
 	}
 }
