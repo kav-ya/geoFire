@@ -1,0 +1,55 @@
+@import "compass";
+@import "compass/reset";
+
+
+
+////////////////////////////////////////////////////
+// LAYOUT //////////////////////////////////////////
+////////////////////////////////////////////////////
+html, body, #map-canvas {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+
+
+////////////////////////////////////////////////////
+// SIDEBAR /////////////////////////////////////////
+////////////////////////////////////////////////////
+#sidebar {
+	@include opacity(.9);
+	background: #FFF;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	z-index: 1000;
+	width: 300px;
+
+	header {
+
+	}
+
+	.content {
+		padding: 20px;
+		position: absolute;
+		top: 60px;
+		bottom: 58px;
+		left: 0px;
+		right: 0px;
+		z-index: 2;
+		overflow: auto;
+	}
+
+	footer {
+		position: absolute;
+		bottom: 0px;
+		left: 0px;
+		right: 0px;
+		z-index: 1;
+		background: #333;
+		padding: 10px;
+	}
+}
