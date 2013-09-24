@@ -31,44 +31,44 @@
 
             <h3>About the demo</h3>
             <p>
-                The example is using the <strong>geofence</strong> method in geofire to update
+                The example is using the <strong>onPointsNearLoc</strong> function in geoFire to update
                 an area of the map in realtime.
             </p>
 
-            <h3>API Methods</h3>
+            <h3>API Functions</h3>
             <dl>
                 <dt>insertByLoc()</dt>
                 <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>insertByLocWithId()</dt>
+                <dd>Inserts data by location, specified by a [latitude, longitude] array, and a client-provided identifer.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>removeById()</dt>
+                <dd>Removes the data point with the specified Id; the data point must have been inserted using insertByLocWithId.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>getLocById()</dt>
+                <dd>Gets the location of the data point with the specified Id; the data point must have been inserted using insertByLocWithId.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>updateLocForId()</dt>
+                <dd>Updates the location of the data point with the specified Id; the data point must have been inserted using insertByLocWithId.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>getPointsNearLoc()</dt>
+                <dd>Finds all data points that are within the specified radius from the source point, specified by a [latitude, longitude] array, at the time the function is called.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>onPointsNearLoc()</dt>
+                <dd>As above but continues to return matching data points till offPointsNearLoc is called.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>offPointsNearLoc()</dt>
+                <dd></dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>getPointsNearId()</dt>
+                <dd>Finds all data points that are within the specified radius from the source point, specified by Id, at the time the function is called.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>onPointsNearId()</dt>
+                <dd>As above but continues to return matching data points till offPointsNearId is called.</dd>
 
-                <dt>insertByLoc()</dt>
-                <dd>Inserts data solely by location, specified by a [latitude, longitude] array.</dd>
+                <dt>offPointsNearId()</dt>
+                <dd></dd>
             </dl>
         </section>
 
