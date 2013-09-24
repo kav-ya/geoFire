@@ -12,6 +12,16 @@ html, body, #map-canvas {
     font-family: sans-serif;
 }
 
+////////////////////////////////////////////////////
+// SOCIAL BAR //////////////////////////////////////
+////////////////////////////////////////////////////
+#social-bar {
+	position: fixed;
+	top: 20px;
+	right: 360px;
+	z-index: 50;
+}
+
 
 
 ////////////////////////////////////////////////////
@@ -68,7 +78,7 @@ html, body, #map-canvas {
 	.content {
 		padding: 20px;
 		position: absolute;
-		top: 60px;
+		top: 66px;
 		bottom: 58px;
 		left: 0px;
 		right: 0px;
