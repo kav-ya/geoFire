@@ -34,8 +34,8 @@
 
             <h3>About the demo</h3>
             <p>
-                The example is using the <strong>onPointsNearLoc</strong> function in geoFire to update
-                an area of the map in realtime.
+                The example is using geoFire's <strong>onPointsNearLoc</strong> function to get the list of buses
+                within the highlighted area of the map in real-time.
             </p>
 
             <h3>API Functions</h3>
@@ -62,7 +62,7 @@
                 <dd>As above but continues to return matching data points till offPointsNearLoc is called.</dd>
 
                 <dt>offPointsNearLoc()</dt>
-                <dd></dd>
+                <dd>Cancels a search that was initiated by onPointsNearLoc with the source point, radius and callback specified.</dd>
 
                 <dt>getPointsNearId()</dt>
                 <dd>Finds all data points that are within the specified radius from the source point, specified by Id, at the time the function is called.</dd>
@@ -71,7 +71,7 @@
                 <dd>As above but continues to return matching data points till offPointsNearId is called.</dd>
 
                 <dt>offPointsNearId()</dt>
-                <dd></dd>
+                <dd>Cancels a search that was initiated by onPointsNearId with the source point, radius and callback specified.</dd>
             </dl>
         </section>
 
@@ -84,7 +84,7 @@
     <!-- LOCATION CONSOLE -->
     <section id="location-console" class="animated slideInUp">
 
-        <h3><i class="icon-circle-blank"></i> Buses Currently In Geo Fence</h3>
+        <h3><i class="icon-circle-blank"></i> Buses currently in the circle </h3>
 
         <ul class="clearfix"><ul>
     </section>

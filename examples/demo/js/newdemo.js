@@ -9,7 +9,11 @@ var idRef = geoRef.child("/dataById");
 // For the search
 var geo = new geoFire(new Firebase("https://munigeo.firebaseio.com/sf-muni/geo"));
 var center = [37.7789, -122.3917];
-var searchRadiusInMiles = 2;
+var src = [37.779551, -122.413813];
+//var searchRadiusInMiles = 2;
+var radiusInKm = 0.5;
+
+// UI Elements
 var $console = $('#location-console');
 var $consoleList = $('#location-console ul');
 
@@ -24,6 +28,7 @@ function initialize() {
     map = new google.maps.Map(document.getElementById("map-canvas"),
                               mapOptions);
 
+    circleLoc = new google.maps.LatLng(src[0], src[1]);
     var circleOptions = {
         strokeColor: "#6D3099",
         strokeOpacity: 0.7,
@@ -31,8 +36,8 @@ function initialize() {
         fillColor: "#B650FF",
         fillOpacity: 0.35,
         map: map,
-        center: loc,
-        radius: (geoFire.miles2km(searchRadiusInMiles) * 1000)/15
+        center: circleLoc,
+        radius: (radiusInKm) * 1000 //(geoFire.miles2km(searchRadiusInMiles) * 1000)/15
     };
 
     circle = new google.maps.Circle(circleOptions);
@@ -50,8 +55,6 @@ idRef.on("child_changed", function(snapshot) {
             createCar(snapshot.val(), snapshot.name());
         }
         else {
-            console.log("DEBUG: Going to animatedMoveTo");
-
             var loc = geoFire.decode(snapshot.val().geohash);
             marker.animatedMoveTo(loc[0], loc[1]);
         }
@@ -67,8 +70,7 @@ idRef.on("child_removed", function(snapshot) {
         }
     });
 
-// This is the one!
-geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allBuses) {
+geo.onPointsNearLoc(src, radiusInKm, function(allBuses) {
     $consoleList.html('').hide();
     var buses = [];
 
@@ -78,7 +80,7 @@ geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allB
 
     var uniqueBuses = _.unique(buses);
 
-    // LOOP THROUGH AND ADD COORDINATES
+    // Loop through and add coordinates
     _.each(uniqueBuses, function(bus){
         $consoleList.append('<li>' + bus + '</li>');
     });
