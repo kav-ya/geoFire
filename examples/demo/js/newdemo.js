@@ -10,7 +10,8 @@ var idRef = geoRef.child("/dataById");
 var geo = new geoFire(new Firebase("https://munigeo.firebaseio.com/sf-muni/geo"));
 var center = [37.7789, -122.3917];
 var searchRadiusInMiles = 2;
-var $console = $('#location-console ul');
+var $console = $('#location-console');
+var $consoleList = $('#location-console ul');
 
 function initialize() {
     loc = new google.maps.LatLng(center[0], center[1]);
@@ -68,7 +69,7 @@ idRef.on("child_removed", function(snapshot) {
 
 // This is the one!
 geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allBuses) {
-    $console.html('');
+    $consoleList.html('');
     var buses = [];
 
     _.map(allBuses, function(bus) {
@@ -79,7 +80,7 @@ geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allB
 
     // LOOP THROUGH AND ADD COORDINATES
     _.each(uniqueBuses, function(bus){
-        $console.append('<li>' + bus + '</li>').hide().fadeIn();
+        $consoleList.append('<li>' + bus + '</li>').hide().fadeIn();
     });
 });
 
