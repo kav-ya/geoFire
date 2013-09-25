@@ -1,5 +1,5 @@
 var cars = {},
-    map;
+    map, circle;
 
 // For creating the map markers
 var geoRef = new Firebase("https://munigeo.firebaseio.com/sf-muni/geo/geoFire");
@@ -22,6 +22,19 @@ function initialize() {
 
     map = new google.maps.Map(document.getElementById("map-canvas"),
                               mapOptions);
+
+    var circleOptions = {
+        strokeColor: "#FF0000",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: "#FF0000",
+        fillOpacity: 0.35,
+        map: map,
+        center: loc,
+        radius: (geoFire.miles2km(searchRadiusInMiles) * 1000)/15
+    };
+    
+    //    circle = new google.maps.Circle(circleOptions);
 }
 
 idRef.once("value", function(snapshot) {
@@ -64,7 +77,7 @@ geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allB
 
     var uniqueBuses = _.unique(buses);
 
-    //LOOP THROUGH AND ADD COORDIANATES
+    // LOOP THROUGH AND ADD COORDINATES
     _.each(uniqueBuses, function(bus){
         $console.append('<li>' + bus + '</li>').hide().fadeIn();
     });
