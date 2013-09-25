@@ -10,6 +10,7 @@ var idRef = geoRef.child("/dataById");
 var geo = new geoFire(new Firebase("https://munigeo.firebaseio.com/sf-muni/geo"));
 var center = [37.7789, -122.3917];
 var searchRadiusInMiles = 2;
+var $console = $('#location-console ul');
 
 function initialize() {
     loc = new google.maps.LatLng(center[0], center[1]);
@@ -53,15 +54,21 @@ idRef.on("child_removed", function(snapshot) {
     });
 
 // This is the one!
-geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(array) {
-        var results = [];
-        for (var i = 0; i < array.length; i++) {
-            results.push(array[i].routeTag);
-        }
+geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allBuses) {
+    $console.html('');
+    var buses = [];
 
-        console.log("DEBUG: results, results.length = ", results, results.length);
-        // Populate the box with results
+    _.map(allBuses, function(bus) {
+        buses.push(bus.routeTag);
     });
+
+    var uniqueBuses = _.unique(buses);
+
+    //LOOP THROUGH AND ADD COORDIANATES
+    _.each(uniqueBuses, function(bus){
+        $console.append('<li>' + bus + '</li>').hide().fadeIn();
+    });
+});
 
 function createCar(car, firebaseId) {
     var latLon = new google.maps.LatLng(car.lat, car.lon);
@@ -88,8 +95,8 @@ function feq (f1, f2) {
     return (Math.abs(f1 - f2) < 0.000001);
 }
 
-// Vikrum's hack to animate/move the Marker class                                                                                                                                                
-// based on http://stackoverflow.com/a/10906464 
+// Vikrum's hack to animate/move the Marker class
+// based on http://stackoverflow.com/a/10906464
 google.maps.Marker.prototype.animatedMoveTo = function(toLat, toLng) {
 
     console.log("In animatedMoveto!");
@@ -118,7 +125,7 @@ google.maps.Marker.prototype.animatedMoveTo = function(toLat, toLng) {
                 }, wait);
         }
     }
-    
+
     // begin animation, send back to origin after completion
     move(this, frames, 0, 25);
 }
