@@ -585,7 +585,6 @@
                                     });
     }
     
-
     /**
      * Cancels a search that was initiated by onPointsNearLoc/ onPointsNearId
      * with the source point, radius and callback specified. If no callback is specified,
@@ -593,20 +592,29 @@
      * A call cancels one corresponding call. The function does not return anything.                                                                       
      */
     geoFire.prototype.cancelSearch = function cancelSearch(srcHash, radius, cb) {
+        var self = this;
+
+        // Small optimization
         if (!([srcHash, radius] in onSearches))
             return;
         
         var searchRecord = onSearches[[srcHash, radius]],
             prefixes = searchRecord.prefixes;
-            
-        var callbacks = onCallbacks[[srcHash, radius]],
-            cancel;
-        
-        for (var i = 0; i < callbacks.length; i++) {
-            if (callbacks[i].callback == cb) {
-                cancel = callbacks[i];
-                callbacks.splice(i, 1);
+        var callbacks = onCallbacks[[srcHash, radius]];
+
+        var turnOff = function(cancel) {
+            for (var i = 0; i < prefixes.length; i++) {
+                var startPrefix = prefixes[i];
+                var endPrefix = startPrefix;
+                endPrefix = startPrefix + "~";
+                
+                self._firebase
+                    .startAt(null, startPrefix)
+                    .endAt(null, endPrefix)
+                    .off('value', cancel);
             }
+
+            searchRecord.count -= 1;
         }
 
         // No pending searches
@@ -615,25 +623,29 @@
             delete onCallbacks[[srcHash, radius]];
             return;
         }
-
-        // No matching callbacks registered
-        if (!cancel)
+        
+        // No callback specified, therefore cancel all pending.
+        if (typeof cb === 'undefined') {
+            for (var i = 0; i < callbacks.length; i++) {
+                turnOff(callbacks[i]);
+                callbacks.splice(i, 1);
+            }
             return;
-
-        for (var i = 0; i < prefixes.length; i++) {
-            var startPrefix = prefixes[i];
-            var endPrefix = startPrefix;
-            endPrefix = startPrefix + "~";
-            
-            this._firebase
-                .startAt(null, startPrefix)
-                .endAt(null, endPrefix)
-                .off('value', cancel);
         }
 
-        searchRecord.count -= 1;
+        // Find matching and cancel
+        for (var j = 0; j < callbacks.length; j++) {
+            if (callbacks[j].callback == cb) {
+                turnOff(callbacks[j]);
+                callbacks.splice(j, 1);
+                break;
+            }
+        }
+        
+        // No matching callbacks
+        return;
     }
-    
+
     if (typeof module === "undefined") {
         self.geoFire = geoFire;
     } else {

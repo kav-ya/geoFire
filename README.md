@@ -31,7 +31,7 @@ The geoFire library provides functions to:
     - [offPointsNearLoc](#offpointsnearloclatlon-radius-callback)
     - [getPointsNearId](#getpointsnearidid-radius-callback)
     - [onPointsNearId](#onpointsnearidid-radius-callback)
-    - [offPointsNearId](#onpointsnearidid-radius-callback)
+    - [offPointsNearId](#offpointsnearidid-radius-callback)
 
 The library also has helper functions to:  
   4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
@@ -140,14 +140,19 @@ each time the set of search results changes.**
 
 ###offPointsNearLoc(latLon, radius, callback)
 
-Cancels a search that was initiated by `onPointsNearLoc` with the source point and radius specified.
-An `offPointsNearLoc` call cancels one `onPointsNearLoc` call. The function does not return anything.
+Cancels a search that was initiated by `onPointsNearLoc` with the source                                                                                                                         
+point, radius and callback specified. If no callback is specified, all                                                                                                                         
+outstanding searches for the source point-radius pair are cancelled.                                                                                                                           
+An `offPointsNearLoc` call cancels one outstanding `onPointsNearLoc` call.                                                                                                                          
+The function does not return anything.
 
-    geo.offPointsNearLoc([37.771393, -122.447104], 5,
-                        function(array) {
-                            for (var i = 0; i < array.length; i++)
-                                console.log("A found point = ", array[i]);
-            });
+    var loc = [37.771393, -122.447104],
+        radius = 5,
+        myCallback = function() { // Do something };
+
+    geo.onPointsNearLoc(loc, radius, myCallback);
+
+    geo.offPointsNearLoc(loc, radius, myCallback);
 
 ###getPointsNearId(id, radius, callback)
 
@@ -181,14 +186,19 @@ each time the set of search results changes.**
 
 ###offPointsNearId(id, radius, callback)
 
-Cancels a search that was initiated by `onPointsNearId` with the source point and radius specified.
-An `offPointsNearId` call cancels one `onPointsNearId` call. The function does not return anything.
+Cancels a search that was initiated by `onPointsNearId` with the source                                                                                                                          
+point, radius and callback specified. If no callback is specified, all                                                                                                                         
+outstanding searches for the source point-radius pair are cancelled                                                                                                                            
+An `offPointsNearId` call cancels one `onPointsNearId` call.                                                                                                                                       
+The function does not return anything.
 
-    geo.offPointsNearId(car2.id, 5,
-                       function(array) {
-                        for (var i = 0; i < array.length; i++)
-                            console.log("A found point = ", array[i]);
-                       });
+    var id = car2.id,
+        radius = 5,
+        myCallback = function() { // Do something };
+
+    geo.onPointsNearId(id, radius, myCallback);
+
+    geo.offPointsNearId(id, radius, myCallback);
 
 
 **NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles](#km2mileskilometers).**
