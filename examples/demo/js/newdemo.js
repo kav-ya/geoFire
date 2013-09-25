@@ -69,21 +69,24 @@ idRef.on("child_removed", function(snapshot) {
     });
 
 geo.onPointsNearLoc(src, radiusInKm, function(allBuses) {
-    $consoleList.html('').hide();
-    var buses = [];
+    if(allBuses.length > 0) {
+        $consoleList.html('').hide();
+        var buses = [];
 
-    _.map(allBuses, function(bus) {
-        buses.push(bus.routeTag);
-    });
+        _.map(allBuses, function(bus) {
+            buses.push(bus.routeTag);
+        });
 
-    var uniqueBuses = _.unique(buses);
+        var uniqueBuses = _.unique(buses);
 
-    // Loop through and add coordinates
-    _.each(uniqueBuses, function(bus){
-        $consoleList.append('<li>' + bus + '</li>');
-    });
+        // Loop through and add coordinates
+        _.each(uniqueBuses, function(bus){
+            $consoleList.append('<li>' + bus + '</li>');
+        });
 
-    $consoleList.fadeIn();
+        $consoleList.fadeIn();
+
+    }
 });
 
 function createCar(car, firebaseId) {
