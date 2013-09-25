@@ -61,8 +61,6 @@ idRef.on("child_changed", function(snapshot) {
     });
 
 idRef.on("child_removed", function(snapshot) {
-        console.log("DEBUG: Child removed");
-
         var marker = cars[snapshot.name()];
         if (typeof marker !== 'undefined') {
             marker.setMap(null);
@@ -116,9 +114,6 @@ function feq (f1, f2) {
 // Vikrum's hack to animate/move the Marker class
 // based on http://stackoverflow.com/a/10906464
 google.maps.Marker.prototype.animatedMoveTo = function(toLat, toLng) {
-
-    console.log("In animatedMoveto!");
-
     var fromLat = this.getPosition().lat();
     var fromLng = this.getPosition().lng();
 
