@@ -298,11 +298,9 @@
                 if (!error) {
                     var copy = setHash(data, geohash);
                     self._agents.child(id).set(copy, function(error) {
-                            console.log("DEBUG: Insert error");
                             cb(error);
                         });
                 } else {
-                    console.log("DEBUG: Insert error");
                     cb(error);
                 }
             });
