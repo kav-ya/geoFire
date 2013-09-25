@@ -38,8 +38,8 @@
 
     var noop = function() {};
 
-    var resultHandler;
-    var onSearches = {};
+    var onSearches = {},
+        onCallbacks = {};
     
     /**
      * Generate a geohash of the specified precision/string length
@@ -482,7 +482,7 @@
         queries = values(uniquesObj);
         delete uniquesObj;
         
-        resultHandler = function(snapshot) {            
+        var resultHandler = function(snapshot) {            
             // Compile the results for each of the queries as they return.
             var matchSet = snapshot.val();
             for (var hash in matchSet) {
@@ -490,7 +490,7 @@
                     matches.push([hash, matchSet[hash][pushId]]);
                 }
             }
-
+            
             // Wait for each of the queries to return before filtering and sorting.
             if (++i >= queries.length) {
                 // Filter the returned queries using the specified radius.
@@ -505,12 +505,12 @@
                         matchesFiltered.push(matchElt);
                     }
                 }
-	      
+                
                 // Sort the results by radius.
                 matchesFiltered.sort(function(a, b) {
                         return distDict[a] - distDict[b];
                     });
-
+                
                 cb(matchesFiltered);
 
                 matches = [];
@@ -518,6 +518,7 @@
                 distDict = {};
            }
         };
+        resultHandler.callback = cb;
 
         var prefixList = [];
         for (var ix = 0; ix < queries.length; ix++) {
@@ -541,20 +542,23 @@
         }
         
         if (setAlert) {
-            if ([srcHash, radius] in onSearches)
-                //onSearches[[srcHash, radius]].push(prefixList);
+            if ([srcHash, radius] in onSearches) {
                 onSearches[[srcHash, radius]].count += 1;
-            else {
+                onCallbacks[[srcHash, radius]].push(resultHandler);
+            } else {
                 var searchRecord = { prefixes: prefixList, count: 1 };
                 onSearches[[srcHash, radius]] = searchRecord;
+                onCallbacks[[srcHash, radius]] = [resultHandler];
             }
         }
     };
     
     /**
      * Cancels a search that was initiated by onPointsNearLoc with the source
-     * point and radius specified. An offPointsNearLoc call cancels one
-     * onPointsNearLoc call. The function does not return anything.
+     * point, radius and callback specified. If no callback is specified, all
+     * outstanding searches for the source point-radius pair are cancelled.
+     * An offPointsNearLoc call cancels one onPointsNearLoc call.
+     * The function does not return anything.
      */
     geoFire.prototype.offPointsNearLoc = function offPointsNearLoc(latLon, radius,
                                                                    cb) {
@@ -564,8 +568,10 @@
     
     /**
      * Cancels a search that was initiated by onPointsNearId with the source
-     * point and radius specified. An offPointsNearId call cancels one
-     * onPointsNearId call. The function does not return anything.
+     * point, radius and callback specified. If no callback is specified, all                                            
+     * outstanding searches for the source point-radius pair are cancelled
+     * An offPointsNearId call cancels one onPointsNearId call.
+     * The function does not return anything.
      */
     geoFire.prototype.offPointsNearId = function offPointsNearId(id, radius, cb) {
         var self = this;
@@ -582,19 +588,38 @@
 
     /**
      * Cancels a search that was initiated by onPointsNearLoc/ onPointsNearId
-     * with the source point and radius specified. A call cancels one
-     * corresponding call. The function does not return anything.                                                                       
+     * with the source point, radius and callback specified. If no callback is specified,
+     * all aoutstanding searches for the source point-radius pair are cancelled. 
+     * A call cancels one corresponding call. The function does not return anything.                                                                       
      */
     geoFire.prototype.cancelSearch = function cancelSearch(srcHash, radius, cb) {
         if (!([srcHash, radius] in onSearches))
             return;
         
         var searchRecord = onSearches[[srcHash, radius]],
-        prefixes = searchRecord.prefixes;
+            prefixes = searchRecord.prefixes;
+            
+        var callbacks = onCallbacks[[srcHash, radius]],
+            cancel;
         
-        if (searchRecord.count <= 0)
+        for (var i = 0; i < callbacks.length; i++) {
+            if (callbacks[i].callback == cb) {
+                cancel = callbacks[i];
+                callbacks.splice(i, 1);
+            }
+        }
+
+        // No pending searches
+        if (searchRecord.count <= 0) {
+            delete onSearches[[srcHash, radius]];
+            delete onCallbacks[[srcHash, radius]];
             return;
-        
+        }
+
+        // No matching callbacks registered
+        if (!cancel)
+            return;
+
         for (var i = 0; i < prefixes.length; i++) {
             var startPrefix = prefixes[i];
             var endPrefix = startPrefix;
@@ -603,7 +628,7 @@
             this._firebase
                 .startAt(null, startPrefix)
                 .endAt(null, endPrefix)
-                .off('value', resultHandler);
+                .off('value', cancel);
         }
 
         searchRecord.count -= 1;
