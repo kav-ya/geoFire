@@ -25,16 +25,16 @@ function initialize() {
                               mapOptions);
 
     var circleOptions = {
-        strokeColor: "#FF0000",
-        strokeOpacity: 0.75,
+        strokeColor: "#6D3099",
+        strokeOpacity: 0.7,
         strokeWeight: 1,
-        fillColor: "#FF0000",
-        fillOpacity: 0.25,
+        fillColor: "#B650FF",
+        fillOpacity: 0.35,
         map: map,
         center: loc,
         radius: (geoFire.miles2km(searchRadiusInMiles) * 1000)/15
     };
-    
+
     circle = new google.maps.Circle(circleOptions);
 }
 
@@ -69,7 +69,7 @@ idRef.on("child_removed", function(snapshot) {
 
 // This is the one!
 geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allBuses) {
-    $consoleList.html('');
+    $consoleList.html('').hide();
     var buses = [];
 
     _.map(allBuses, function(bus) {
@@ -80,8 +80,10 @@ geo.onPointsNearLoc(center, geoFire.miles2km(searchRadiusInMiles), function(allB
 
     // LOOP THROUGH AND ADD COORDINATES
     _.each(uniqueBuses, function(bus){
-        $consoleList.append('<li>' + bus + '</li>').hide().fadeIn();
+        $consoleList.append('<li>' + bus + '</li>');
     });
+
+    $consoleList.fadeIn();
 });
 
 function createCar(car, firebaseId) {
