@@ -551,33 +551,49 @@
         }
     };
     
+    /**
+     * Cancels a search that was initiated by onPointsNearLoc with the source
+     * point and radius specified. An offPointsNearLoc call cancels one
+     * onPointsNearLoc call. The function does not return anything.
+     */
     geoFire.prototype.offPointsNearLoc = function offPointsNearLoc(latLon, radius,
                                                                    cb) {
-            var hash = encode(latLon);
-            this.cancelSearch(hash, radius, cb);
+        var hash = encode(latLon);
+        this.cancelSearch(hash, radius, cb);
     }
     
+    /**
+     * Cancels a search that was initiated by onPointsNearId with the source
+     * point and radius specified. An offPointsNearId call cancels one
+     * onPointsNearId call. The function does not return anything.
+     */
     geoFire.prototype.offPointsNearId = function offPointsNearId(id, radius, cb) {
         var self = this;
         this._agents.child(id).once('value',
                                     function (snapshot) {
                                         var data = snapshot.val();
                                         if (data === null)
-                                            return; //cb(null);
+                                            return;
                                         else
                                             self.cancelSearch(data.geohash, radius, cb);
                                     });
     }
+    
 
+    /**
+     * Cancels a search that was initiated by onPointsNearLoc/ onPointsNearId
+     * with the source point and radius specified. A call cancels one
+     * corresponding call. The function does not return anything.                                                                       
+     */
     geoFire.prototype.cancelSearch = function cancelSearch(srcHash, radius, cb) {
         if (!([srcHash, radius] in onSearches))
-            return; //throw new Error();
+            return;
         
         var searchRecord = onSearches[[srcHash, radius]],
         prefixes = searchRecord.prefixes;
         
         if (searchRecord.count <= 0)
-            return; //throw new Error();
+            return;
         
         for (var i = 0; i < prefixes.length; i++) {
             var startPrefix = prefixes[i];

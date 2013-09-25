@@ -28,8 +28,10 @@ The geoFire library provides functions to:
   3. [Perform localized searches] (#performing-localized-searches):  
     - [getPointsNearLoc](#getpointsnearloclatlon-radius-callback)  
     - [onPointsNearLoc](#onpointsnearloclatlon-radius-callback)
+    - [offPointsNearLoc](#offpointsnearloclatlon-radius-callback)
     - [getPointsNearId](#getpointsnearidid-radius-callback)
     - [onPointsNearId](#onpointsnearidid-radius-callback)
+    - [offPointsNearId](#onpointsnearidid-radius-callback)
 
 The library also has helper functions to:  
   4. [Convert between latitude, longitude pairs and geohashes](#locationgeohash-conversion):  
@@ -136,6 +138,17 @@ each time the set of search results changes.**
                                 console.log("A found point = ", array[i]);
             });
 
+###offPointsNearLoc(latLon, radius, callback)
+
+Cancels a search that was initiated by `onPointsNearLoc` with the source point and radius specified.
+An `offPointsNearLoc` call cancels one `onPointsNearLoc` call. The function does not return anything.
+
+    geo.offPointsNearLoc([37.771393, -122.447104], 5,
+                        function(array) {
+                            for (var i = 0; i < array.length; i++)
+                                console.log("A found point = ", array[i]);
+            });
+
 ###getPointsNearId(id, radius, callback)
 
 Finds all data points within the specified radius, in kilometers, from the
@@ -165,6 +178,18 @@ each time the set of search results changes.**
                         for (var i = 0; i < array.length; i++)
                             console.log("A found point = ", array[i]);
                        });
+
+###offPointsNearId(id, radius, callback)
+
+Cancels a search that was initiated by `onPointsNearId` with the source point and radius specified.
+An `offPointsNearId` call cancels one `onPointsNearId` call. The function does not return anything.
+
+    geo.offPointsNearId(car2.id, 5,
+                       function(array) {
+                        for (var i = 0; i < array.length; i++)
+                            console.log("A found point = ", array[i]);
+                       });
+
 
 **NOTE: You can convert between miles and kilometers with [miles2km](#miles2kmmiles) and [km2miles](#km2mileskilometers).**
 

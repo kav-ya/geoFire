@@ -26,16 +26,16 @@ function initialize() {
 
     var circleOptions = {
         strokeColor: "#FF0000",
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
+        strokeOpacity: 0.75,
+        strokeWeight: 1,
         fillColor: "#FF0000",
-        fillOpacity: 0.35,
+        fillOpacity: 0.25,
         map: map,
         center: loc,
         radius: (geoFire.miles2km(searchRadiusInMiles) * 1000)/15
     };
     
-    //    circle = new google.maps.Circle(circleOptions);
+    circle = new google.maps.Circle(circleOptions);
 }
 
 idRef.once("value", function(snapshot) {
