@@ -9,7 +9,7 @@ var idRef = geoRef.child("/dataById");
 // For the search
 var geo = new geoFire(new Firebase("https://munigeo.firebaseio.com/sf-muni/geo"));
 var center = [37.7789, -122.3917];
-var src = [37.779551, -122.413813];
+var src = [37.785326, -122.402696];//[37.779551, -122.413813];
 //var searchRadiusInMiles = 2;
 var radiusInKm = 0.5;
 

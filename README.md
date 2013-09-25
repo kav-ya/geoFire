@@ -140,10 +140,8 @@ each time the set of search results changes.**
 
 ###offPointsNearLoc(latLon, radius, callback)
 
-Cancels a search that was initiated by `onPointsNearLoc` with the source                                                                                                                         
-point, radius and callback specified. If no callback is specified, all                                                                                                                         
-outstanding searches for the source point-radius pair are cancelled.                                                                                                                           
-An `offPointsNearLoc` call cancels one outstanding `onPointsNearLoc` call.                                                                                                                          
+Cancels a search that was initiated by `onPointsNearLoc` with the source point, radius and callback specified. If no callback is specified, all
+outstanding searches for the source point-radius pair are cancelled. An `offPointsNearLoc` call cancels one outstanding `onPointsNearLoc` call.
 The function does not return anything.
 
     var loc = [37.771393, -122.447104],
@@ -186,10 +184,8 @@ each time the set of search results changes.**
 
 ###offPointsNearId(id, radius, callback)
 
-Cancels a search that was initiated by `onPointsNearId` with the source                                                                                                                          
-point, radius and callback specified. If no callback is specified, all                                                                                                                         
-outstanding searches for the source point-radius pair are cancelled                                                                                                                            
-An `offPointsNearId` call cancels one `onPointsNearId` call.                                                                                                                                       
+Cancels a search that was initiated by `onPointsNearId` with the source point, radius and callback specified. If no callback is specified, all
+outstanding searches for the source point-radius pair are cancelled. An `offPointsNearId` call cancels one `onPointsNearId` call.
 The function does not return anything.
 
     var id = car2.id,
