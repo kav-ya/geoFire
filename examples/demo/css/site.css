@@ -124,27 +124,32 @@ html, body, #map-canvas {
 /* line 77, ../scss/site.scss */
 #location-console ul {
   list-style-type: none;
-  padding: 0px;
+  padding: 5px;
 }
 /* line 81, ../scss/site.scss */
 #location-console ul li {
-  background: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #eeeeee), color-stop(100%, #ffffff));
-  background: -webkit-linear-gradient(top left, #eeeeee, #ffffff);
-  background: -moz-linear-gradient(top left, #eeeeee, #ffffff);
-  background: -o-linear-gradient(top left, #eeeeee, #ffffff);
-  background: linear-gradient(top left, #eeeeee, #ffffff);
-  color: #999;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+  background: #EFEFEF;
+  border: 1px solid #DDD;
+  color: #b650ff;
   font-size: 11px;
-  margin: 0px;
+  margin: 5px;
   float: left;
-  height: 30px;
-  width: 30px;
-  line-height: 30px;
+  height: 28px;
+  width: 46px;
+  line-height: 28px;
   display: block;
   text-align: center;
 }
 
-/* line 100, ../scss/site.scss */
+/* line 103, ../scss/site.scss */
 #sidebar-wrapper {
   filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=20);
   opacity: 0.2;
@@ -158,7 +163,7 @@ html, body, #map-canvas {
   border-left: 1px solid #FFF;
 }
 
-/* line 111, ../scss/site.scss */
+/* line 114, ../scss/site.scss */
 #sidebar {
   -webkit-border-radius: 3px;
   -moz-border-radius: 3px;
@@ -176,7 +181,7 @@ html, body, #map-canvas {
   z-index: 1000;
   width: 300px;
 }
-/* line 122, ../scss/site.scss */
+/* line 125, ../scss/site.scss */
 #sidebar header {
   -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
@@ -188,7 +193,7 @@ html, body, #map-canvas {
   border-bottom: 1px solid #eab914;
   position: relative;
 }
-/* line 131, ../scss/site.scss */
+/* line 134, ../scss/site.scss */
 #sidebar header h1 {
   font-size: 30px;
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
@@ -199,7 +204,7 @@ html, body, #map-canvas {
   color: #c39302;
   text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.3);
 }
-/* line 141, ../scss/site.scss */
+/* line 144, ../scss/site.scss */
 #sidebar header h2 {
   font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
   font-size: 11px;
@@ -208,21 +213,21 @@ html, body, #map-canvas {
   right: 10px;
   z-index: 1;
 }
-/* line 149, ../scss/site.scss */
+/* line 152, ../scss/site.scss */
 #sidebar header h2 strong {
   font-weight: bold;
 }
-/* line 153, ../scss/site.scss */
+/* line 156, ../scss/site.scss */
 #sidebar header h2 a {
   text-decoration: none;
   color: #c39302;
 }
-/* line 157, ../scss/site.scss */
+/* line 160, ../scss/site.scss */
 #sidebar header h2 a:hover {
   text-decoration: underline;
   color: #50B1FF;
 }
-/* line 165, ../scss/site.scss */
+/* line 168, ../scss/site.scss */
 #sidebar .content {
   padding: 20px 20px;
   position: absolute;
@@ -234,16 +239,16 @@ html, body, #map-canvas {
   overflow: auto;
   color: #41403E;
 }
-/* line 176, ../scss/site.scss */
+/* line 179, ../scss/site.scss */
 #sidebar .content a {
   color: #408ecc;
 }
-/* line 180, ../scss/site.scss */
+/* line 183, ../scss/site.scss */
 #sidebar .content strong {
   font-weight: bold;
   color: #41403e;
 }
-/* line 185, ../scss/site.scss */
+/* line 188, ../scss/site.scss */
 #sidebar .content h3 {
   font-weight: bold;
   font-size: 18px;
@@ -251,26 +256,26 @@ html, body, #map-canvas {
   margin: 0px 0px 10px 0px;
   line-height: 24px;
 }
-/* line 193, ../scss/site.scss */
+/* line 196, ../scss/site.scss */
 #sidebar .content p {
   margin-bottom: 40px;
   line-height: 24px;
   font-size: 14px;
 }
-/* line 200, ../scss/site.scss */
+/* line 203, ../scss/site.scss */
 #sidebar .content dl dt {
   font-weight: bold;
   font-size: 13px;
   color: #408ecc;
   line-height: 24px;
 }
-/* line 207, ../scss/site.scss */
+/* line 210, ../scss/site.scss */
 #sidebar .content dl dd {
   line-height: 24px;
   margin-bottom: 20px;
   font-size: 13px;
 }
-/* line 218, ../scss/site.scss */
+/* line 221, ../scss/site.scss */
 #sidebar footer {
   -webkit-box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
   -moz-box-shadow: 0px -1px 2px rgba(0, 0, 0, 0.15);
